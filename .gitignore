@@ -7,57 +7,54 @@
 *.jar
 *.war
 *.ear
+## Java
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+*.class
+*.war
+*.ear
 hs_err_pid*
+*/generated-sources/*
 
-# =========================
-# Operating System Files
-# =========================
 
-# OSX
-# =========================
+## Android Studio and Intellij and Android in general
+#android/libs/armeabi/
+#android/libs/armeabi-v7a/
+#android/libs/x86/
+#android/gen/
+.idea/
+*.ipr
+*.iws
+*.iml
+out/
+#com_crashlytics_export_strings.xml
 
-.DS_Store
-.AppleDouble
-.LSOverride
+## Eclipse
+.classpath
+.project
+.metadata
+**/bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.externalToolBuilders/
+*.launch
 
-# Thumbnails
-._*
+## NetBeans
+**/nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
 
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
+## Gradle
 
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-# Windows
-# =========================
-
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
+.gradle
+gradle-app.setting
+build/
