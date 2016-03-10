@@ -9,4 +9,8 @@ public class Player {
     private int id;
     private String name;
     private int elo;
+
+    public Player(String name,int elo) {
+
+    }
 }

@@ -1,5 +1,6 @@
 package matchmaker.queue;
 
+import configs.QueueConfig;
 import matchmaker.Player;
 import matchmaker.match.Match;
 
@@ -12,10 +13,18 @@ import java.util.LinkedList;
  * assembled with configuring these objects.
  */
 public class Queue {
+    private final long queueId;
     private QueueStatus status;
+    private QueueConfig config;
     private LinkedList<QueueEntry> players = new LinkedList<>();
     private QueueMatcher matcher;
     private LinkedList<Match> found_matches = new LinkedList<>();
+
+    public Queue(long id, QueueConfig config){
+        queueId = id;
+        this.config = config;
+        matcher = new QueueMatcher(this.config.teamSize, this.config.teamCount);
+    }
 
     public QueueStatus onUpdate() {
         LinkedList<Match> matches = matcher.findMatches(players);

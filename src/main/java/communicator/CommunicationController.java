@@ -1,8 +1,9 @@
 package communicator;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import communicator.requests.CreateQueueRequest;
+import communicator.responses.CreateQueueResponse;
+import matchmaker.queue.QueueHandler;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Robi on 2016.02.29..
@@ -14,14 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CommunicationController {
 
-    @RequestMapping
-    public void onGet( CommObject req){
-        //Handles the incoming object, redirect to the proper
-    }
-
-    @ResponseBody
-    public void send( CommObject res){
-        //Sends back the information to the proper client.
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public @ResponseBody CreateQueueResponse CreateQueue(@RequestBody CreateQueueRequest req) {
+        long queueId = QueueHandler.getHandler().createQueue(req.clientId, req.config);
+        return new CreateQueueResponse(queueId);
     }
 
 }

@@ -9,5 +9,15 @@ package matchmaker.match;
 public class Match {
     private int matchID;
     private Team[] teams;
+    private int teamCount;
 
+    public Match(int id){
+        matchID = id;
+        teamCount = 0;
+    }
+
+    public void addTeam(Team team) {
+        teams[teamCount]  = team;
+        teamCount++;
+    }
 }
