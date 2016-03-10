@@ -34,4 +34,8 @@ public class QueueHandler {
     public static QueueHandler getHandler() {
         return instance;
     }
+
+    public static void initialize() {
+        instance = new QueueHandler();
+    }
 }
