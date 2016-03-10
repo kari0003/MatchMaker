@@ -1,4 +1,4 @@
-package java.communicator;
+package communicator;
 
 /**
  * Created by Robi on 2016.02.29..

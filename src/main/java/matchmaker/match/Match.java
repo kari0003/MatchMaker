@@ -1,4 +1,4 @@
-package java.matchmaker.match;
+package matchmaker.match;
 
 /**
  * Created by Robi on 2016.02.26..

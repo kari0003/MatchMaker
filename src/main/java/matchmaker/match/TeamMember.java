@@ -1,4 +1,4 @@
-package java.matchmaker.match;
+package matchmaker.match;
 
 import matchmaker.Player;
 
