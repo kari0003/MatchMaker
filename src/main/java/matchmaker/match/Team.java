@@ -1,24 +1,25 @@
 package matchmaker.match;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Robi on 2016.02.26..
  * Represents a team of players. The number of players are defined by the Queue Configuration.
  */
-public class Team {
+public class Team implements Serializable{
     private final int teamID;
-    private ArrayList<TeamMember> members;
+    private TeamMember[] members;
     private int memberCount;
 
-    public Team(int id){
+    public Team(int id, int teamSize){
         teamID = id;
         memberCount = 0;
-        members = new ArrayList<TeamMember>();
+        members = new TeamMember[teamSize];
     }
 
     public void addMember(TeamMember member) {
-        members.add(memberCount,member);
+        members[memberCount] = member;
         memberCount += 1;
     }
 

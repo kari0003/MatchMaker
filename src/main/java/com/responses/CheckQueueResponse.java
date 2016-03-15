@@ -12,15 +12,23 @@ import java.util.LinkedList;
  */
 public class CheckQueueResponse {
     public QueueStatus status;
-    public LinkedList<Match> matches;
+    public Match matches;
 
     public CheckQueueResponse(LinkedList<Match> matches, QueueStatus status){
         this.status = status;
-        this.matches = matches;
+        if(matches.size() < 0) {
+            this.matches = matches.pop();
+        }
+        /*
+        this.matches = new Match[matches.size()];
+        for(int i = 0; i < matches.size(); i++){
+            this.matches[i] = matches.pop();
+        }
+        */
     }
 
     public CheckQueueResponse(){
         status = QueueStatus.INACTIVE;
-        matches = new LinkedList<Match>();
+        //matches = new Match[0];
     }
 }
