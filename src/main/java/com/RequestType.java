@@ -1,4 +1,4 @@
-package communicator;
+package com;
 
 /**
  * Created by Robi on 2016.02.29..

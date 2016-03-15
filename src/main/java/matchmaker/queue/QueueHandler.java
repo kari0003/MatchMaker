@@ -1,8 +1,10 @@
 package matchmaker.queue;
 
-import configs.QueueConfig;
+import com.configs.QueueConfig;
+import matchmaker.match.Match;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 
 /**
  * Created by Robi on 2016.02.26..
@@ -37,5 +39,24 @@ public class QueueHandler {
 
     public static void initialize() {
         instance = new QueueHandler();
+    }
+
+    public Queue getQueue(long queueId) {
+        for(Queue q : queues){
+            if(queueId == q.getQueueId()){
+                return q;
+            }
+        }
+        return null;
+    }
+
+    public LinkedList<Match> checkQueue(long queueId) {
+        update();
+        for(Queue q : queues){
+            if(queueId == q.getQueueId()){
+                return q.getFoundMatches();
+            }
+        }
+        return null;
     }
 }

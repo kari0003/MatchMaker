@@ -1,13 +1,30 @@
-package communicator.requests;
+package com.requests;
 
-import configs.QueueConfig;
+import com.configs.QueueConfig;
 
 /**
  * Created by Robi on 2016.03.10..
  */
 public class CreateQueueRequest {
-    public final long clientId;
-    public final QueueConfig config;
+    private long clientId;
+
+    public void setClientId(long clientId) {
+        this.clientId = clientId;
+    }
+
+    public void setConfig(QueueConfig config) {
+        this.config = config;
+    }
+
+    private QueueConfig config;
+
+    public long getClientId() {
+        return clientId;
+    }
+
+    public QueueConfig getConfig() {
+        return config;
+    }
 
     public CreateQueueRequest(long id, QueueConfig config){
         this.clientId = id;
@@ -22,5 +39,10 @@ public class CreateQueueRequest {
     public CreateQueueRequest(long id){
         this.clientId = id;
         this.config = new QueueConfig(100, 3, 2);
+    }
+
+    public CreateQueueRequest(){
+        clientId = -1;
+        config = new QueueConfig();
     }
 }

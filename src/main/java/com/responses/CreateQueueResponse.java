@@ -1,4 +1,4 @@
-package communicator.responses;
+package com.responses;
 
 /**
  * Created by Robi on 2016.03.10..

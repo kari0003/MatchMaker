@@ -1,6 +1,4 @@
-package configs;
-
-import matchmaker.queue.Queue;
+package com.configs;
 
 /**
  * Created by Robi on 2016.03.10..
@@ -14,5 +12,11 @@ public class QueueConfig {
         updateInterval = updateMillis;
         this.teamCount = teamCount;
         this.teamSize = teamSize;
+    }
+
+    public QueueConfig(){
+        updateInterval = 1000;
+        teamSize = 3;
+        teamCount = 2;
     }
 }

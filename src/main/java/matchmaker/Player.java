@@ -6,11 +6,21 @@ package matchmaker;
  * leaves the queue (in case of a match) as a super object of TeamMember.
  */
 public class Player {
-    private int id;
-    private String name;
+    private static int lastId = 0;
+    private final int id;
+    private final String name;
     private int elo;
 
     public Player(String name,int elo) {
+        lastId += 1;
+        id = lastId;
+        this.name = name;
+        this.elo = elo;
+    }
 
+    public Player() {
+        id = -1;
+        name = "Dummy";
+        elo = 0;
     }
 }

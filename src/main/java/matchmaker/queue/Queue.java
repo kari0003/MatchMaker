@@ -1,6 +1,6 @@
 package matchmaker.queue;
 
-import configs.QueueConfig;
+import com.configs.QueueConfig;
 import matchmaker.Player;
 import matchmaker.match.Match;
 
@@ -43,5 +43,15 @@ public class Queue {
         //players.remove();
     }
 
+    public long getQueueId(){
+        return queueId;
+    }
 
+    public QueueStatus getStatus(){
+        return status;
+    }
+
+    public LinkedList<Match> getFoundMatches(){
+        return found_matches;
+    }
 }
