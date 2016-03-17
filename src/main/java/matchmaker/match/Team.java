@@ -7,15 +7,19 @@ import java.util.ArrayList;
  * Created by Robi on 2016.02.26..
  * Represents a team of players. The number of players are defined by the Queue Configuration.
  */
-public class Team implements Serializable{
-    private final int teamID;
-    private TeamMember[] members;
+public class Team{
+    public final int teamId;
+    public TeamMember[] members;
     private int memberCount;
 
     public Team(int id, int teamSize){
-        teamID = id;
+        teamId = id;
         memberCount = 0;
         members = new TeamMember[teamSize];
+    }
+
+    public Team(){
+        teamId = -1;
     }
 
     public void addMember(TeamMember member) {
@@ -23,7 +27,7 @@ public class Team implements Serializable{
         memberCount += 1;
     }
 
-    public int getTeamID() {
-        return teamID;
+    public int getTeamId() {
+        return teamId;
     }
 }

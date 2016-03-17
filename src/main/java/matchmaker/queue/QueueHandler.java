@@ -20,16 +20,20 @@ public class QueueHandler {
         queueCount = 0;
     }
 
-    public void update(){
+    public QueueStatus update(long queueId){
         for (Queue q : queues
              ) {
-            q.onUpdate();
+            if(queueId == q.getQueueId()){
+                return q.onUpdate();
+            }
         }
+        return null;
     }
 
     public long createQueue(long clientId, QueueConfig config) {
         long queueId = clientId + 1000*queueCount;
         queues.add(new Queue(clientId + 1000*queueCount, config));
+        QueueEvents.registerQueue(queueId);
         return queueId;
     }
 
@@ -51,7 +55,6 @@ public class QueueHandler {
     }
 
     public LinkedList<Match> checkQueue(long queueId) {
-        update();
         for(Queue q : queues){
             if(queueId == q.getQueueId()){
                 return q.getFoundMatches();

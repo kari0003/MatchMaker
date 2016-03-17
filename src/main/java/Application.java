@@ -1,4 +1,5 @@
-import com.CommunicationController;
+import com.ComController;
+import matchmaker.queue.QueueEvents;
 import matchmaker.queue.QueueHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,13 +17,11 @@ public class Application {
     public static void main(String[] args){
         System.out.println("Hello Dude!");
         QueueHandler.initialize();
-        ApplicationContext ctx = SpringApplication.run(CommunicationController.class, args);
+        ApplicationContext ctx = SpringApplication.run(ComController.class, args);
 
-        String[] beanNames = ctx.getBeanDefinitionNames();
-        Arrays.sort(beanNames);
-        for (String beanName : beanNames) {
-            System.out.println(beanName);
-        }
+        Thread t = new Thread(new QueueEvents());
+        t.start();
+
 
     }
 }

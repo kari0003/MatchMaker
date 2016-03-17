@@ -7,9 +7,9 @@ package matchmaker;
  */
 public class Player {
     private static int lastId = 0;
-    private final int id;
-    private final String name;
-    private int elo;
+    public final int id;
+    public final String name;
+    public final int elo;
 
     public Player(String name,int elo) {
         lastId += 1;

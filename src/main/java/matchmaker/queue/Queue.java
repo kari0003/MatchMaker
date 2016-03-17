@@ -23,14 +23,17 @@ public class Queue {
     public Queue(long id, QueueConfig config){
         queueId = id;
         this.config = config;
+        status = QueueStatus.ACTIVE;
         matcher = new QueueMatcher(this.config.teamSize, this.config.teamCount);
     }
 
     public QueueStatus onUpdate() {
         LinkedList<Match> matches = matcher.findMatches(players);
         if (matches != null && matches.size() > 0) {
+            System.out.println("FOUND MATCHES: " + matches.size());
             status = QueueStatus.MATCH_FOUND;
             found_matches.addAll(matches);
+            System.out.println("Still - " + found_matches.size());
         }
         return status;
     }
