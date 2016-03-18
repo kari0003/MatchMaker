@@ -7,7 +7,6 @@ import com.configs.QueueConfig;
  */
 public class CreateQueueRequest {
     private long clientId;
-    private QueueConfig config;
 
     public void setClientId(long clientId) {
         this.clientId = clientId;
@@ -16,6 +15,8 @@ public class CreateQueueRequest {
     public void setConfig(QueueConfig config) {
         this.config = config;
     }
+
+    private QueueConfig config;
 
     public long getClientId() {
         return clientId;

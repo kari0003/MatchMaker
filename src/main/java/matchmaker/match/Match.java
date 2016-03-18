@@ -9,19 +9,15 @@ import java.util.ArrayList;
  * Contains the teams of the match. The number of teams are specified by the Queue configuration
  *
  */
-public class Match{
-    public final int matchId;
-    public Team[] teams;
+public class Match implements Serializable{
+    private final int matchID;
+    private Team[] teams;
     private int teamCount;
 
     public Match(int id, int teamSize){
-        matchId = id;
+        matchID = id;
         teamCount = 0;
         teams = new Team[teamSize];
-    }
-
-    public Match(){
-        matchId = -1;
     }
 
     public void addTeam(Team team) {

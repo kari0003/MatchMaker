@@ -21,10 +21,10 @@ public class QueueMatcher {
 
     public LinkedList<Match> findMatches(LinkedList<QueueEntry> players){
         LinkedList<Match> matches = new LinkedList<Match>();
-        while(players.size() >= teamSize*teamCount){
+        while(players.size() > teamSize*teamCount){
             Match result = new Match(0,teamCount); //TODO Match id generation
             for(int teamId = 0; teamId<teamCount; teamId++){
-                Team iteraTeam = new Team(teamId,teamSize);
+                Team iteraTeam = new Team(teamCount,teamSize);
                 for(int position = 0; position < teamSize; position++){
                     TeamMember member = new TeamMember(position , players.pop().player);
                     iteraTeam.addMember(member);
