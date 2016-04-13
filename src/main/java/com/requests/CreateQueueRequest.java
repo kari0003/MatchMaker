@@ -1,6 +1,6 @@
 package com.requests;
 
-import com.configs.QueueConfig;
+import config.QueueConfig;
 
 /**
  * Created by Robi on 2016.03.10..

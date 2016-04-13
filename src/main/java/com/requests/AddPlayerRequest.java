@@ -1,6 +1,6 @@
 package com.requests;
 
-import matchmaker.Player;
+import matchmaker.match.Player;
 
 /**
  * Created by Robi on 2016.03.15..

@@ -1,4 +1,4 @@
-package matchmaker;
+package matchmaker.match;
 
 /**
  * Created by Robi on 2016.02.25..
@@ -22,5 +22,9 @@ public class Player {
         id = -1;
         name = "Dummy";
         elo = 0;
+    }
+
+    public int getElo(){
+        return elo;
     }
 }

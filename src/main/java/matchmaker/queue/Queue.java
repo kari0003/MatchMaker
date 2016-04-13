@@ -1,7 +1,7 @@
 package matchmaker.queue;
 
-import com.configs.QueueConfig;
-import matchmaker.Player;
+import config.QueueConfig;
+import matchmaker.match.Player;
 import matchmaker.match.Match;
 
 import java.util.LinkedList;

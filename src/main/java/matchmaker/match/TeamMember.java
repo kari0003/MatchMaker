@@ -1,7 +1,5 @@
 package matchmaker.match;
 
-import matchmaker.Player;
-
 import java.io.Serializable;
 
 /**
@@ -15,5 +13,9 @@ public class TeamMember implements Serializable{
     public TeamMember(int teamPosition, Player p){
         this.player = p;
         this.teamPosition = teamPosition;
+    }
+
+    public double getScore(){
+        return player.getElo();
     }
 }

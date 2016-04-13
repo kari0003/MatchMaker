@@ -1,5 +1,7 @@
 package matchmaker.queue;
 
+import config.MatchConfig;
+import config.MatcherConfig;
 import matchmaker.match.Match;
 import matchmaker.match.Team;
 import matchmaker.match.TeamMember;
@@ -11,16 +13,18 @@ import java.util.LinkedList;
  * Created by Robi on 2016.02.26..
  */
 public class QueueMatcher {
-    private int teamSize;
-    private int teamCount;
+    MatchConfig matchConfig;
+    MatcherConfig matcherConfig;
 
     public QueueMatcher(int teamSize, int teamCount){
-        this.teamSize = teamSize;
-        this.teamCount = teamCount;
+        this.matchConfig.teamSize = teamSize;
+        this.matchConfig.teamCount = teamCount;
     }
 
     public LinkedList<Match> findMatches(LinkedList<QueueEntry> players){
         LinkedList<Match> matches = new LinkedList<Match>();
+        int teamSize = matchConfig.teamSize;
+        int teamCount = matchConfig.teamCount;
         while(players.size() > teamSize*teamCount){
             Match result = new Match(0,teamCount); //TODO Match id generation
             for(int teamId = 0; teamId<teamCount; teamId++){

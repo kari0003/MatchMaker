@@ -23,6 +23,33 @@ public class Team implements Serializable{
         memberCount += 1;
     }
 
+    public double getTeamScore(){
+        double score = 0;
+        for (TeamMember m : members) {
+            score += m.getScore();
+        }
+        return score;
+    }
+
+    public double getTeamDist(){
+        double[][] diffStat = new double[members.length][members.length];
+        double[] avgDist = new double[members.length];
+        double maxDist = 0;
+        for(int i = 0; i < members.length; i++){
+            avgDist[i] = 0;
+            for(int j = i; j < members.length; j++){
+                diffStat[i][j] = Math.abs(members[i].getScore() - members[j].getScore());
+                avgDist[i] += diffStat[i][j];
+                if(diffStat[i][j] > maxDist){
+                    maxDist = diffStat[i][j];
+                }
+            }
+            avgDist[i] /= members.length;
+        }
+
+        return maxDist;
+    }
+
     public int getTeamID() {
         return teamID;
     }
