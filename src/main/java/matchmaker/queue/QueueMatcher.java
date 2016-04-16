@@ -13,8 +13,8 @@ import java.util.LinkedList;
  * Created by Robi on 2016.02.26..
  */
 public class QueueMatcher {
-    MatchConfig matchConfig;
-    MatcherConfig matcherConfig;
+    public MatchConfig matchConfig;
+    public MatcherConfig matcherConfig;
 
     public QueueMatcher(int teamSize, int teamCount){
         this.matchConfig.teamSize = teamSize;

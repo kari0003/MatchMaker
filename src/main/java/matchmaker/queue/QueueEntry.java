@@ -1,6 +1,7 @@
 package matchmaker.queue;
 
 import matchmaker.match.Player;
+import matchmaker.match.Team;
 
 /**
  * Created by Robi on 2016.02.26..
@@ -13,5 +14,18 @@ public class QueueEntry {
     public QueueEntry(Player player) {
         this.player = player;
         enter_time = System.currentTimeMillis();
+    }
+
+    public double getDist(QueueEntry from){
+        return Math.abs(from.player.getElo() - player.getElo());
+
+    }
+
+    public double getDist(Team team) {
+        return 0;//TODO
+    }
+
+    public int getMemberCount(){
+        return 1;
     }
 }

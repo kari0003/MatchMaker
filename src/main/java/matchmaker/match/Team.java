@@ -1,5 +1,7 @@
 package matchmaker.match;
 
+import matchmaker.queue.QueueEntry;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -22,6 +24,13 @@ public class Team implements Serializable{
         members[memberCount] = member;
         memberCount += 1;
     }
+
+    public void addMember(QueueEntry found) {
+        TeamMember m = new TeamMember(memberCount, found.player);
+        members[memberCount] = m;
+        memberCount += 1;
+    }
+
 
     public double getTeamScore(){
         double score = 0;
@@ -50,7 +59,12 @@ public class Team implements Serializable{
         return maxDist;
     }
 
+    public int getMemberCount(){
+        return memberCount;
+    }
+
     public int getTeamID() {
         return teamID;
     }
+
 }

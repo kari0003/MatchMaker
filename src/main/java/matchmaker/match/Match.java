@@ -25,6 +25,14 @@ public class Match implements Serializable{
         teamCount++;
     }
 
+    public Team getTeam(int i){
+        return teams[i];
+    }
+
+    public int getTeamCount(){
+        return teams.length;
+    }
+
     /**
      * Based on team scores and distances. A match below strictnesss treshold is good to go.
      */
