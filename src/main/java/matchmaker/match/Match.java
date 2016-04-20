@@ -89,4 +89,22 @@ public class Match implements Serializable{
         }
         return dist;
     }
+
+    public double getTeamDistWithRolster(int forTeam, QueueEntry rolster) {
+        double maxDist = 420;
+        boolean isMaxDistSet = false;
+        for(int i = 0; i< teamCount; i++){
+            double dist = Math.abs(teams[forTeam].getTeamScoreWithRolster(rolster) - teams[i].getTeamScore());
+            if(i != forTeam){
+                if(! isMaxDistSet){
+                    maxDist = dist;
+                    isMaxDistSet = true;
+                }
+                if(maxDist < dist){
+                    maxDist = dist;
+                }
+            }
+        }
+        return maxDist;
+    }
 }

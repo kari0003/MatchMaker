@@ -28,4 +28,8 @@ public class QueueEntry {
     public int getMemberCount(){
         return 1;
     }
+
+    public double getScore() {
+        return player.getElo();
+    }
 }

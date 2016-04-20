@@ -83,8 +83,11 @@ public class RolsterMatcher extends QueueMatcher {
         double bestDist = 0;
         for(QueueEntry rolster : potentials){
             if(rolster.getMemberCount() + forMatch.getTeam(forTeam).getMemberCount() < matchConfig.teamSize){
-                if ((rolster.getDist(forMatch.getTeam(forTeam)) < bestDist )||(potentials.get(0) == rolster)){
-                    bestDist = rolster.getDist(forMatch.getTeam(forTeam));
+                double playerDist =  rolster.getDist(forMatch.getTeam(forTeam));
+                double teamDist = forMatch.getTeamDistWithRolster(forTeam, rolster);
+                double dist = teamDist + playerDist;
+                if (( dist < bestDist )||(potentials.get(0) == rolster)){
+                    bestDist = playerDist;
                     best = rolster;
                 }
             }

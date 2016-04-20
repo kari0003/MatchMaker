@@ -75,4 +75,13 @@ public class Team implements Serializable{
         }
         return entries;
     }
+
+    public double getTeamScoreWithRolster(QueueEntry rolster) {
+        double score = 0;
+        for (TeamMember m : members) {
+            score += m.getScore();
+        }
+        score += rolster.getScore();
+        return score;
+    }
 }

@@ -18,7 +18,7 @@ public class TeamMember implements Serializable{
     }
 
     public double getScore(){
-        return rolster.player.getElo();
+        return rolster.getScore();
     }
 
     public QueueEntry getQueueEntry() {
