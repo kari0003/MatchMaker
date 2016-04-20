@@ -38,6 +38,7 @@ public class Match implements Serializable{
 
     /**
      * Based on team scores and distances. A match below strictnesss treshold is good to go.
+     * @return score of the match based on player elo & rolster data
      */
     public double getMatchScore(){
         double[][] diffStat = new double[teams.length][teams.length];
@@ -68,5 +69,24 @@ public class Match implements Serializable{
             entries.addAll(t.getQueueEntries());
         }
         return entries;
+    }
+
+    /**
+     * Returns max distance amongst teams. (compares TeamScore)
+     * @return the maximum distance between teams.
+     */
+    public double getMaxDistance() {
+        double dist = 0;
+        for(int i = 0; i < teamCount; i++){
+            for(int j = i+1; j< teamCount; j++){
+                if(i==0 && j==1){
+                    dist = Math.abs(teams[i].getTeamScore() - teams[j].getTeamScore());
+                }
+                if(dist < Math.abs(teams[i].getTeamScore() - teams[j].getTeamScore())){
+                    dist = Math.abs(teams[i].getTeamScore() - teams[j].getTeamScore());
+                }
+            }
+        }
+        return dist;
     }
 }
