@@ -30,7 +30,7 @@ public class QueueMatcher {
             for(int teamId = 0; teamId<teamCount; teamId++){
                 Team iteraTeam = new Team(teamCount,teamSize);
                 for(int position = 0; position < teamSize; position++){
-                    TeamMember member = new TeamMember(position , players.pop().player);
+                    TeamMember member = new TeamMember(position , players.pop());
                     iteraTeam.addMember(member);
                 }
                 result.addTeam(iteraTeam);

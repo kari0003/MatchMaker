@@ -8,6 +8,10 @@ import java.util.HashMap;
 public class MatcherConfig {
     public HashMap<String, Boolean> considerAspect = new HashMap<String, Boolean>();
     public HashMap<String, Double> weighAspect = new HashMap<String, Double>();
+    public int maxPotentials;
+    public int maxTargets;
+    public int maxDistanceTeams;
+    public int maxDistancePlayers;
 
     public MatcherConfig(){
         considerAspect.put("elo", true);
@@ -16,6 +20,11 @@ public class MatcherConfig {
 
         weighAspect.put("elo", 0.7);
         weighAspect.put("time", 0.3);
+
+        maxPotentials = 30;
+        maxTargets = 1;
+        maxDistancePlayers = 100;
+        maxDistanceTeams = 300;
     }
 
 }

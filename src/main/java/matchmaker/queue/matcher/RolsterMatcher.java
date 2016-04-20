@@ -1,5 +1,6 @@
 package matchmaker.queue.matcher;
 
+import config.MatcherConfig;
 import matchmaker.match.Match;
 import matchmaker.match.Team;
 import matchmaker.queue.QueueEntry;
@@ -11,29 +12,54 @@ import java.util.LinkedList;
  * Created by Robi on 2016.04.15..
  */
 public class RolsterMatcher extends QueueMatcher {
+    private int maxTargets = 1;
     private int maxPotentials = 30;
     private double maxDist = 100;
 
 
-    public RolsterMatcher(int teamSize, int teamCount) {
+    public RolsterMatcher(MatcherConfig conf, int teamSize, int teamCount)
+    {
         super(teamSize, teamCount);
+        maxTargets = conf.maxTargets;
+        maxPotentials = conf.maxPotentials;
+        maxDist = conf.maxDistancePlayers;
     }
 
     @Override
     public LinkedList<Match> findMatches(LinkedList<QueueEntry> rolsters){
-        LinkedList<Match> results = new LinkedList<Match>();
-        results.add(populateMatch(rolsters));
+        LinkedList<Match> results = new LinkedList<>();
+        LinkedList<QueueEntry> targets = gatherTargets(rolsters);
+        while(targets.size() > 0){
+            Match selected = populateMatch(targets.pop(), rolsters);
+            if(selected != null){
+                results.add(selected);
+                rolsters.removeAll(selected.getQueueEntries());
+            }
+        }
         return results;
+    }
+
+    private LinkedList<QueueEntry> gatherTargets(LinkedList<QueueEntry> rolsters) {
+        LinkedList<QueueEntry> result = new LinkedList<>();
+        int count = Math.min(maxTargets, rolsters.size());
+        for(int i = 0; i< maxTargets; i++){
+            result.add(rolsters.get(i));
+        }
+        //TODO configurable target selection
+        //result.add(rolsters.getLast());
+        return result;
     }
 
     private LinkedList<QueueEntry> getPotentials(LinkedList<QueueEntry> rolsters, QueueEntry target){
         LinkedList<QueueEntry> potentials = new LinkedList<QueueEntry>();
         for (QueueEntry rolster : rolsters) {
-            if(target.getDist(rolster) < maxDist){
-                potentials.push(rolster);
-            }
-            if(potentials.size() > maxPotentials){
-                break;
+            if(target.player != rolster.player) {
+                if (target.getDist(rolster) < maxDist) {
+                    potentials.push(rolster);
+                }
+                if (potentials.size() > maxPotentials) {
+                    break;
+                }
             }
         }
         return potentials;
@@ -64,14 +90,13 @@ public class RolsterMatcher extends QueueMatcher {
         return best;
     }
 
-    private Match populateMatch(LinkedList<QueueEntry> rolsters){
+    private Match populateMatch(QueueEntry target, LinkedList<QueueEntry> rolsters){
         Match match = new Match(0, matchConfig.teamCount);
         for(int i = 0; i < matchConfig.teamCount; i++){
             match.addTeam(new Team(i, matchConfig.teamSize));
         }
         boolean success = false;
         boolean finished = false;
-        QueueEntry target = rolsters.pop();
         LinkedList<QueueEntry> potentials = getPotentials(rolsters, target);
         while(!finished){
             int nextInsert = getTeamToInsertInto(match);

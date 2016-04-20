@@ -1,7 +1,10 @@
 package matchmaker.match;
 
+import matchmaker.queue.QueueEntry;
+
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.lang.reflect.Member;
+import java.util.*;
 
 /**
  * Created by Robi on 2016.02.26..
@@ -57,5 +60,13 @@ public class Match implements Serializable{
         }
         return maxDist;
         //return maxDist/conf.maxMatchDist + maxTeamDist/conf.maxTeamDist;
+    }
+
+    public Collection<QueueEntry> getQueueEntries() {
+        Collection<QueueEntry> entries = new LinkedList<>();
+        for (Team t: teams) {
+            entries.addAll(t.getQueueEntries());
+        }
+        return entries;
     }
 }

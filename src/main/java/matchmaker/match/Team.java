@@ -4,6 +4,7 @@ import matchmaker.queue.QueueEntry;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by Robi on 2016.02.26..
@@ -26,7 +27,7 @@ public class Team implements Serializable{
     }
 
     public void addMember(QueueEntry found) {
-        TeamMember m = new TeamMember(memberCount, found.player);
+        TeamMember m = new TeamMember(memberCount, found);
         members[memberCount] = m;
         memberCount += 1;
     }
@@ -67,4 +68,11 @@ public class Team implements Serializable{
         return teamID;
     }
 
+    public Collection<? extends QueueEntry> getQueueEntries() {
+        ArrayList<QueueEntry> entries = new ArrayList<QueueEntry>();
+        for(TeamMember m : members){
+            entries.add(m.getQueueEntry());
+        }
+        return entries;
+    }
 }

@@ -1,5 +1,7 @@
 package matchmaker.match;
 
+import matchmaker.queue.QueueEntry;
+
 import java.io.Serializable;
 
 /**
@@ -8,14 +10,18 @@ import java.io.Serializable;
  */
 public class TeamMember implements Serializable{
     private int teamPosition;
-    private Player player;
+    private QueueEntry rolster;
 
-    public TeamMember(int teamPosition, Player p){
-        this.player = p;
+    public TeamMember(int teamPosition, QueueEntry entry){
+        this.rolster = entry;
         this.teamPosition = teamPosition;
     }
 
     public double getScore(){
-        return player.getElo();
+        return rolster.player.getElo();
+    }
+
+    public QueueEntry getQueueEntry() {
+        return rolster;
     }
 }
