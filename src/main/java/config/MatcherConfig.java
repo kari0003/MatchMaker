@@ -6,6 +6,7 @@ import java.util.HashMap;
  * Created by Robi on 2016.04.12..
  */
 public class MatcherConfig {
+    public MatcherType matcherType;
     public HashMap<String, Boolean> considerAspect = new HashMap<String, Boolean>();
     public HashMap<String, Double> weighAspect = new HashMap<String, Double>();
     public int maxPotentials;
@@ -14,6 +15,7 @@ public class MatcherConfig {
     public int maxDistancePlayers;
 
     public MatcherConfig(){
+        matcherType = MatcherType.DEFAULT;
         considerAspect.put("elo", true);
         considerAspect.put("time", true);
         considerAspect.put("ping", false);

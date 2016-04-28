@@ -3,6 +3,7 @@ package matchmaker.queue;
 import config.QueueConfig;
 import matchmaker.match.Player;
 import matchmaker.match.Match;
+import matchmaker.queue.matcher.RolsterMatcher;
 
 import java.util.LinkedList;
 
@@ -22,8 +23,19 @@ public class Queue {
 
     public Queue(long id, QueueConfig config){
         queueId = id;
+        String key = "test";
         this.config = config;
-        matcher = new QueueMatcher(this.config.teamSize, this.config.teamCount);
+        matcher = createMatcher(key, config);
+        matcher = new QueueMatcher(config.matcherConfigs.get(key), config.matchConfigs.get(key));
+    }
+
+    private QueueMatcher createMatcher(String key, QueueConfig config) {
+        switch (config.matcherConfigs.get(key).matcherType){
+            case ROLSTER_MATCHER:
+                return new RolsterMatcher(config.matcherConfigs.get(key),config.matchConfigs.get(key));
+            default:
+                return new QueueMatcher(config.matcherConfigs.get(key),config.matchConfigs.get(key));
+        }
     }
 
     public QueueStatus onUpdate() {

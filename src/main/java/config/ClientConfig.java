@@ -7,6 +7,6 @@ import java.util.HashMap;
  *
  * Contains full config of the application.
  */
-public class Configuration {
+public class ClientConfig {
     HashMap<String, QueueConfig> queueConfigs = new HashMap<String, QueueConfig>();
 }

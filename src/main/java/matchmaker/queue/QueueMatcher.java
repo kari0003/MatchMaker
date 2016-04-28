@@ -21,6 +21,11 @@ public class QueueMatcher {
         this.matchConfig.teamCount = teamCount;
     }
 
+    public QueueMatcher(MatcherConfig matcherConfig, MatchConfig matchConfig) {
+        this.matchConfig = matchConfig;
+        this.matcherConfig = matcherConfig;
+    }
+
     public LinkedList<Match> findMatches(LinkedList<QueueEntry> players){
         LinkedList<Match> matches = new LinkedList<Match>();
         int teamSize = matchConfig.teamSize;

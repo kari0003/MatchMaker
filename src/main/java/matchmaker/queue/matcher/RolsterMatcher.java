@@ -1,5 +1,6 @@
 package matchmaker.queue.matcher;
 
+import config.MatchConfig;
 import config.MatcherConfig;
 import matchmaker.match.Match;
 import matchmaker.match.Team;
@@ -25,6 +26,14 @@ public class RolsterMatcher extends QueueMatcher {
         maxPotentials = conf.maxPotentials;
         maxDistancePlayers = conf.maxDistancePlayers;
         maxDistanceTeams = conf.maxDistanceTeams;
+    }
+
+    public RolsterMatcher(MatcherConfig matcherConfig, MatchConfig matchConfig) {
+        super(matcherConfig, matchConfig);
+        maxTargets = matcherConfig.maxTargets;
+        maxPotentials = matcherConfig.maxPotentials;
+        maxDistancePlayers = matcherConfig.maxDistancePlayers;
+        maxDistanceTeams = matcherConfig.maxDistanceTeams;
     }
 
     @Override
