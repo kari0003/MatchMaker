@@ -5,6 +5,7 @@ import com.requests.CheckQueueRequest;
 import com.requests.CreateQueueRequest;
 import com.responses.CheckQueueResponse;
 import com.responses.CreateQueueResponse;
+import config.ClientConfig;
 import matchmaker.match.Match;
 import matchmaker.queue.QueueHandler;
 import matchmaker.queue.QueueStatus;
@@ -26,7 +27,8 @@ public class CommunicationController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public @ResponseBody Client index() {
-        return new Client();
+        long clientId = ClientHandler.createClient(new ClientConfig());
+        return ClientHandler.getClient(clientId);
     }
 
     @RequestMapping(value = "/queue/create", method = RequestMethod.POST)

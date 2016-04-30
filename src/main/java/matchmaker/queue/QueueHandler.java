@@ -1,6 +1,5 @@
 package matchmaker.queue;
 
-import com.Client;
 import com.ClientHandler;
 import config.QueueConfig;
 import matchmaker.match.Match;
