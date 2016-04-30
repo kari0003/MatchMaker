@@ -1,14 +1,20 @@
 package com;
 
+import config.ClientConfig;
+
 /**
  * Created by Robi on 2016.03.15..
  */
 public class Client {
-    private static long lastId = 0;
     public long clientId;
+    public ClientConfig conf;
 
     public Client(){
-        lastId += 1;
-        clientId = lastId;
+        conf = new ClientConfig();
     }
+
+    public Client(ClientConfig conf){
+        this.conf = conf;
+    }
+
 }

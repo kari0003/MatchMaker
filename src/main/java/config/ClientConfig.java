@@ -8,5 +8,14 @@ import java.util.HashMap;
  * Contains full config of the application.
  */
 public class ClientConfig {
-    HashMap<String, QueueConfig> queueConfigs = new HashMap<String, QueueConfig>();
+    public HashMap<String, QueueConfig> queueConfigs = new HashMap<String, QueueConfig>();
+
+    public ClientConfig(){
+        queueConfigs.put("test", new QueueConfig());
+    }
+
+    public String addQueue(String key, QueueConfig queueConfig){
+        queueConfigs.put(key, queueConfig);
+        return key;
+    }
 }

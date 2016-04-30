@@ -1,5 +1,7 @@
 package matchmaker.queue;
 
+import com.Client;
+import com.ClientHandler;
 import config.QueueConfig;
 import matchmaker.match.Match;
 
@@ -29,7 +31,14 @@ public class QueueHandler {
 
     public long createQueue(long clientId, QueueConfig config) {
         long queueId = clientId + 1000*queueCount;
+        ClientHandler.getClient(clientId).conf.addQueue("id_"+queueId,config);
         queues.add(new Queue(clientId + 1000*queueCount, config));
+        return queueId;
+    }
+
+    public long createQueue(long clientId, String queueKey) {
+        long queueId = clientId + 1000*queueCount;
+        queues.add(new Queue(clientId + 1000*queueCount, ClientHandler.getClient(clientId).conf.queueConfigs.get(queueKey)));
         return queueId;
     }
 
