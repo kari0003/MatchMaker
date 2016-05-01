@@ -13,11 +13,15 @@ public class TeamMember implements Serializable{
     private QueueEntry rolster;
 
     public TeamMember(int teamPosition, QueueEntry entry){
-        this.rolster = entry;
         this.teamPosition = teamPosition;
+        this.rolster = entry;
     }
 
     public double getScore(){
+        if(rolster == null){
+            System.out.printf("buggery!");
+            return 0;
+        }
         return rolster.getScore();
     }
 

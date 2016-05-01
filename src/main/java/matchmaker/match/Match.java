@@ -17,10 +17,13 @@ public class Match implements Serializable{
     private Team[] teams;
     private int teamCount;
 
-    public Match(int id, int teamSize){
+    public Match(int id, int teamCount, int teamSize){
         matchID = id;
-        teamCount = 0;
-        teams = new Team[teamSize];
+        teams = new Team[teamCount];
+        this.teamCount = 0;
+        for(int i = 0; i < teamCount; i++){
+            addTeam(new Team(i, teamSize));
+        }
     }
 
     public void addTeam(Team team) {
@@ -33,7 +36,7 @@ public class Match implements Serializable{
     }
 
     public int getTeamCount(){
-        return teams.length;
+        return teamCount;
     }
 
     /**

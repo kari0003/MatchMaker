@@ -53,7 +53,7 @@ public class RolsterMatcher extends QueueMatcher {
     private LinkedList<QueueEntry> gatherTargets(LinkedList<QueueEntry> rolsters) {
         LinkedList<QueueEntry> result = new LinkedList<>();
         int count = Math.min(maxTargets, rolsters.size());
-        for(int i = 0; i< maxTargets; i++){
+        for(int i = 0; i< count; i++){
             result.add(rolsters.get(i));
         }
         //TODO configurable target selection
@@ -79,7 +79,8 @@ public class RolsterMatcher extends QueueMatcher {
     private int getTeamToInsertInto(Match match){
         int teamId = 0, minCount = 0;
         for(int i = 0; i<match.getTeamCount() ; i++){
-            if((i == 0) || (minCount > match.getTeam(i).getMemberCount()) ){
+            int memberCount = match.getTeam(i).getMemberCount();
+            if((i == 0) || (minCount > memberCount) ){
                 teamId = i;
                 minCount = match.getTeam(i).getMemberCount();
             }
@@ -91,7 +92,7 @@ public class RolsterMatcher extends QueueMatcher {
         QueueEntry best = null;
         double bestDist = 0;
         for(QueueEntry rolster : potentials){
-            if(rolster.getMemberCount() + forMatch.getTeam(forTeam).getMemberCount() < matchConfig.teamSize){
+            if(rolster.getMemberCount() + forMatch.getTeam(forTeam).getMemberCount() <= matchConfig.teamSize){
                 double playerDist =  rolster.getDist(forMatch.getTeam(forTeam));
                 double teamDist = forMatch.getTeamDistWithRolster(forTeam, rolster);
                 double dist = teamDist + playerDist;
@@ -105,10 +106,7 @@ public class RolsterMatcher extends QueueMatcher {
     }
 
     private Match populateMatch(QueueEntry target, LinkedList<QueueEntry> rolsters){
-        Match match = new Match(0, matchConfig.teamCount);
-        for(int i = 0; i < matchConfig.teamCount; i++){
-            match.addTeam(new Team(i, matchConfig.teamSize));
-        }
+        Match match = new Match(0, matchConfig.teamCount, matchConfig.teamSize);
         boolean success = false;
         boolean finished = false;
         LinkedList<QueueEntry> potentials = getPotentials(rolsters, target);
@@ -118,16 +116,20 @@ public class RolsterMatcher extends QueueMatcher {
             QueueEntry found = pickRolster(match, nextInsert, potentials);
 
             potentials.remove(found);
+            System.out.printf("Left: " + potentials.size());
             match.getTeam(nextInsert).addMember(found);
 
-            if(potentials.size() == 0) {
-                finished = true;
-                success = validateMatch(match);
-            }
 
             if(validateMatch(match)){
                 finished = true;
                 success = true;
+                break;
+            }
+            
+            if(potentials.size() == 0) {
+                finished = true;
+                success = validateMatch(match);
+                break;
             }
         }
 

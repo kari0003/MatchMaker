@@ -15,18 +15,26 @@ public class MatcherConfig {
     public int maxDistancePlayers;
 
     public MatcherConfig(){
-        matcherType = MatcherType.DEFAULT;
-        considerAspect.put("elo", true);
-        considerAspect.put("time", true);
-        considerAspect.put("ping", false);
-
-        weighAspect.put("elo", 0.7);
-        weighAspect.put("time", 0.3);
+        this(MatcherType.DEFAULT, 30, 1, 100, 300);
 
         maxPotentials = 30;
         maxTargets = 1;
         maxDistancePlayers = 100;
         maxDistanceTeams = 300;
+    }
+
+    public MatcherConfig(MatcherType type, int maxPotentials, int maxTargets, int maxDistancePlayers, int maxDistanceTeams){
+        matcherType = type;
+        this.maxDistancePlayers = maxDistancePlayers;
+        this.maxTargets = maxTargets;
+        this.maxPotentials = maxPotentials;
+        this.maxDistanceTeams = maxDistanceTeams;
+    }
+
+    public void considerElo(double weight){
+        considerAspect.put("elo", true);
+        weighAspect.put("elo", weight);
+
     }
 
 }

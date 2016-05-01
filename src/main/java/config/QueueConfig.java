@@ -21,6 +21,6 @@ public class QueueConfig {
     }
 
     public QueueConfig(){
-        updateInterval = 1000;
+        this(1000, 3, 2);
     }
 }

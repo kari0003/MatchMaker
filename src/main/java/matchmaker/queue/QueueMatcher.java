@@ -26,14 +26,15 @@ public class QueueMatcher {
         this.matcherConfig = matcherConfig;
     }
 
+    //TODO // FIXME: 2016.04.30. 
     public LinkedList<Match> findMatches(LinkedList<QueueEntry> players){
         LinkedList<Match> matches = new LinkedList<Match>();
         int teamSize = matchConfig.teamSize;
         int teamCount = matchConfig.teamCount;
         while(players.size() > teamSize*teamCount){
-            Match result = new Match(0,teamCount); //TODO Match id generation
+            Match result = new Match(0,teamCount,teamSize); //TODO Match id generation
             for(int teamId = 0; teamId<teamCount; teamId++){
-                Team iteraTeam = new Team(teamCount,teamSize);
+                Team iteraTeam = new Team(teamId,teamSize);
                 for(int position = 0; position < teamSize; position++){
                     TeamMember member = new TeamMember(position , players.pop());
                     iteraTeam.addMember(member);

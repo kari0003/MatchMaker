@@ -22,21 +22,28 @@ public class Team implements Serializable{
     }
 
     public void addMember(TeamMember member) {
-        members[memberCount] = member;
-        memberCount += 1;
+        if(memberCount < members.length) {
+            members[memberCount] = member;
+            memberCount += 1;
+        }else{
+            System.out.printf("Team is full!");
+        }
     }
 
     public void addMember(QueueEntry found) {
-        TeamMember m = new TeamMember(memberCount, found);
-        members[memberCount] = m;
-        memberCount += 1;
+        addMember(new TeamMember(memberCount, found));
     }
 
 
     public double getTeamScore(){
         double score = 0;
-        for (TeamMember m : members) {
-            score += m.getScore();
+        if(memberCount > 0) {
+            for (int i = 0; i < memberCount; i++) {
+                TeamMember m = members[i];
+                if(m != null) {
+                    score += m.getScore();
+                }
+            }
         }
         return score;
     }
@@ -45,9 +52,9 @@ public class Team implements Serializable{
         double[][] diffStat = new double[members.length][members.length];
         double[] avgDist = new double[members.length];
         double maxDist = 0;
-        for(int i = 0; i < members.length; i++){
+        for(int i = 0; i < memberCount; i++){
             avgDist[i] = 0;
-            for(int j = i; j < members.length; j++){
+            for(int j = i; j < memberCount; j++){
                 diffStat[i][j] = Math.abs(members[i].getScore() - members[j].getScore());
                 avgDist[i] += diffStat[i][j];
                 if(diffStat[i][j] > maxDist){
@@ -78,10 +85,9 @@ public class Team implements Serializable{
 
     public double getTeamScoreWithRolster(QueueEntry rolster) {
         double score = 0;
-        for (TeamMember m : members) {
-            score += m.getScore();
-        }
+        score += getTeamScore();
         score += rolster.getScore();
         return score;
     }
+
 }

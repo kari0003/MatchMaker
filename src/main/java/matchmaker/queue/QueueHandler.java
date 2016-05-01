@@ -28,16 +28,32 @@ public class QueueHandler {
         }
     }
 
+    public static long generateId(long clientId,long queueCount){
+        return clientId + 1000*queueCount;
+    }
+
     public long createQueue(long clientId, QueueConfig config) {
-        long queueId = clientId + 1000*queueCount;
-        ClientHandler.getClient(clientId).conf.addQueue("id_"+queueId,config);
-        queues.add(new Queue(clientId + 1000*queueCount, config));
+        long queueId = -1;
+        try {
+            queueId = generateId(clientId, queueCount);
+            ClientHandler.getClient(clientId).conf.addQueue("id_" + queueId, config);
+            queues.add(new Queue(queueId, config));
+            queueCount += 1;
+        }catch(Exception e){
+            System.out.printf(e.getMessage());
+        }
         return queueId;
     }
 
     public long createQueue(long clientId, String queueKey) {
-        long queueId = clientId + 1000*queueCount;
-        queues.add(new Queue(clientId + 1000*queueCount, ClientHandler.getClient(clientId).conf.queueConfigs.get(queueKey)));
+        long queueId = -1;
+        try {
+            queueId = generateId(clientId, queueCount);
+            queues.add(new Queue(queueId, ClientHandler.getClient(clientId).conf.queueConfigs.get(queueKey)));
+            queueCount += 1;
+        }catch(Exception e){
+            System.out.printf(e.getMessage());
+        }
         return queueId;
     }
 

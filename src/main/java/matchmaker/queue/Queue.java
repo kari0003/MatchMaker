@@ -21,20 +21,27 @@ public class Queue {
     private QueueMatcher matcher;
     private LinkedList<Match> found_matches = new LinkedList<>();
 
-    public Queue(long id, QueueConfig config){
+    public Queue(long id, QueueConfig config) throws Exception {
         queueId = id;
         String key = "test";
         this.config = config;
+        status = QueueStatus.ACTIVE;
         matcher = createMatcher(key, config);
-        matcher = new QueueMatcher(config.matcherConfigs.get(key), config.matchConfigs.get(key));
     }
 
-    private QueueMatcher createMatcher(String key, QueueConfig config) {
-        switch (config.matcherConfigs.get(key).matcherType){
-            case ROLSTER_MATCHER:
-                return new RolsterMatcher(config.matcherConfigs.get(key),config.matchConfigs.get(key));
-            default:
-                return new QueueMatcher(config.matcherConfigs.get(key),config.matchConfigs.get(key));
+    private QueueMatcher createMatcher(String key, QueueConfig config) throws Exception {
+        if(config.matcherConfigs.get(key) == null) {
+            throw new Exception("Matcher Configuration not found!");
+        }
+        else if(config.matchConfigs.get(key) == null) {
+            throw new Exception("Match Configuration not found!");
+        }else {
+            switch (config.matcherConfigs.get(key).matcherType) {
+                case ROLSTER_MATCHER:
+                    return new RolsterMatcher(config.matcherConfigs.get(key), config.matchConfigs.get(key));
+                default:
+                    return new QueueMatcher(config.matcherConfigs.get(key), config.matchConfigs.get(key));
+            }
         }
     }
 
@@ -52,7 +59,11 @@ public class Queue {
     }
 
     public void removePlayer(Player player) {
-        //players.remove();
+        for (QueueEntry qe : players) {
+            if(qe.player.equals(player)){
+                players.remove(qe);
+            }
+        }
     }
 
     public long getQueueId(){
@@ -65,5 +76,9 @@ public class Queue {
 
     public LinkedList<Match> getFoundMatches(){
         return found_matches;
+    }
+
+    public LinkedList<QueueEntry> getEntries() {
+        return players;
     }
 }
