@@ -18,7 +18,7 @@ public class Queue {
     private final long queueId;
     private long clientId;
     private QueueStatus status;
-    private QueueConfig config;
+    private QueueConfig conf;
     private LinkedList<QueueEntry> players = new LinkedList<>();
     private QueueMatcher matcher;
     private LinkedList<Match> found_matches = new LinkedList<>();
@@ -28,7 +28,7 @@ public class Queue {
         queueId = id;
         this.clientId = clientId;
         String key = "test";
-        this.config = config;
+        this.conf = config;
         status = QueueStatus.ACTIVE;
         lastUpdateTime = System.currentTimeMillis();
         matcher = createMatcher(key, config);
@@ -72,6 +72,9 @@ public class Queue {
 
     public void addPlayer(Player player) {
         players.add(new QueueEntry(player));
+        if(conf.updateOnInsert){
+            onUpdate();
+        }
     }
 
     public void removePlayer(Player player) {
@@ -108,5 +111,9 @@ public class Queue {
 
     public void setClient(long clientId) {
         this.clientId = clientId;
+    }
+
+    public QueueConfig getConfig() {
+        return conf;
     }
 }

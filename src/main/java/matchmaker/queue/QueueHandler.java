@@ -5,6 +5,7 @@ import com.ClientHandler;
 import config.QueueConfig;
 import matchmaker.match.Match;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -16,52 +17,12 @@ import java.util.LinkedList;
 public class QueueHandler {
     private static QueueHandler instance;
     private HashSet<Queue> queues = new HashSet<>();
+    private HashMap<Long,Thread> updaterThread = new HashMap<>();
     private long queueCount;
+    private static int lastMatchId = -1;
 
     public QueueHandler(){
         queueCount = 0;
-    }
-
-    public void update(){
-        for (Queue q : queues
-             ) {
-            q.onUpdate();
-        }
-    }
-
-    public static long generateId(long clientId,long queueCount){
-        return clientId + 1000*queueCount;
-    }
-
-    public long createQueue(long clientId, QueueConfig config) {
-        long queueId = -1;
-        try {
-            queueId = generateId(clientId, queueCount);
-            ClientHandler.getClient(clientId).conf.addQueue("id_" + queueId, config);
-            queues.add(new Queue(queueId, clientId, config));
-            queueCount += 1;
-        }catch(Exception e){
-            System.out.printf(e.getMessage());
-        }
-        return queueId;
-    }
-
-    public long createQueue(long clientId, String queueKey) {
-        long queueId = -1;
-        try {
-            queueId = generateId(clientId, queueCount);
-            Client client = ClientHandler.getClient(clientId);
-            System.out.printf("WE ARE SCREWED");
-            if(client == null){
-                throw new Error("Client with id:" + clientId + "not found!");
-            }
-            System.out.printf("this is a queue creation:" + queueId + ". Also " + client.clientId);
-            queues.add(new Queue(queueId, clientId, client.conf.queueConfigs.get(queueKey)));
-            queueCount += 1;
-        }catch(Exception e){
-            System.out.printf(e.getMessage());
-        }
-        return queueId;
     }
 
     public static QueueHandler getHandler() {
@@ -70,6 +31,59 @@ public class QueueHandler {
 
     public static void initialize() {
         instance = new QueueHandler();
+    }
+
+    public void updateQueue(long queueId){
+        for (Queue q : queues) {
+            if(q.getQueueId() == queueId) {
+                System.out.printf("Update Queue: " + queueId);
+                q.onUpdate();
+            }
+        }
+    }
+
+    public Thread createUpdaterThread(final long queueId, final QueueConfig conf){
+        Thread updater = new Thread(){
+            @Override
+            public void run() {
+                while(true) {
+                    try {
+                        updateQueue(queueId);
+                        Thread.sleep(conf.updateInterval);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        updaterThread.put(queueId, updater);
+        return updater;
+    }
+
+    public long createQueue(long clientId, QueueConfig config) {
+        long queueId = -1;
+        try {
+            queueId = generateId(clientId, queueCount);
+            Client client = ClientHandler.getClient(clientId);
+            if(client == null){
+                throw new Error("Client with id:" + clientId + "not found!");
+            }
+            client.conf.addQueue("id_" + queueId, config);
+            queues.add(new Queue(queueId, clientId, config));
+            createUpdaterThread(queueId, config);
+            queueCount += 1;
+        }catch(Exception e){
+            System.out.printf(e.getMessage());
+        }
+        return queueId;
+    }
+
+    public long createQueue(long clientId, String queueKey) {
+        Client client = ClientHandler.getClient(clientId);
+        if(client == null){
+            throw new Error("Client with id:" + clientId + "not found!");
+        }
+        return createQueue(clientId, client.conf.queueConfigs.get(queueKey));
     }
 
     public Queue getQueue(long queueId) {
@@ -83,9 +97,11 @@ public class QueueHandler {
     }
 
     public LinkedList<Match> checkQueue(long queueId) {
-        update();
         for(Queue q : queues){
             if(queueId == q.getQueueId()){
+                if(q.getConfig().updateWhenChecked){
+                    updateQueue(queueId);
+                }
                 return q.getFoundMatches();
             }
         }
@@ -119,29 +135,19 @@ public class QueueHandler {
         for(Queue q : queues){
             if(queueId == q.getQueueId()){
                 q.setStatus(QueueStatus.ACTIVE);
-                final Queue qe = q;
-                Thread queueThread = new Thread(){
-                    @Override
-                    public void run()
-                    {
-                        while(true) {
-                            qe.onUpdate();
-                            try {
-                                Thread.sleep(1500);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                };
+                updaterThread.get(queueId).start();
                 break;
             }
         }
     }
 
-    private static int lastMatchId = -1;
     public static int generateMatchId() {
         lastMatchId++;
         return lastMatchId;
     }
+
+    public static long generateId(long clientId,long queueCount){
+        return 1000*clientId + queueCount;
+    }
+
 }
