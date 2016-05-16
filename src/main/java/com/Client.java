@@ -9,12 +9,17 @@ public class Client {
     public long clientId;
     public ClientConfig conf;
 
-    public Client(){
+    public Client(long id){
+        clientId = id;
         conf = new ClientConfig();
     }
 
-    public Client(ClientConfig conf){
+    public Client(long id, ClientConfig conf){
+        clientId = id;
         this.conf = conf;
     }
 
+    public void updateConfig(ClientConfig conf) {
+        this.conf.updateConfig(conf);
+    }
 }

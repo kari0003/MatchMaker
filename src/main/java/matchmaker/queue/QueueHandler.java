@@ -1,5 +1,6 @@
 package matchmaker.queue;
 
+import com.Client;
 import com.ClientHandler;
 import config.QueueConfig;
 import matchmaker.match.Match;
@@ -37,7 +38,7 @@ public class QueueHandler {
         try {
             queueId = generateId(clientId, queueCount);
             ClientHandler.getClient(clientId).conf.addQueue("id_" + queueId, config);
-            queues.add(new Queue(queueId, config));
+            queues.add(new Queue(queueId, clientId, config));
             queueCount += 1;
         }catch(Exception e){
             System.out.printf(e.getMessage());
@@ -49,7 +50,13 @@ public class QueueHandler {
         long queueId = -1;
         try {
             queueId = generateId(clientId, queueCount);
-            queues.add(new Queue(queueId, ClientHandler.getClient(clientId).conf.queueConfigs.get(queueKey)));
+            Client client = ClientHandler.getClient(clientId);
+            System.out.printf("WE ARE SCREWED");
+            if(client == null){
+                throw new Error("Client with id:" + clientId + "not found!");
+            }
+            System.out.printf("this is a queue creation:" + queueId + ". Also " + client.clientId);
+            queues.add(new Queue(queueId, clientId, client.conf.queueConfigs.get(queueKey)));
             queueCount += 1;
         }catch(Exception e){
             System.out.printf(e.getMessage());
@@ -68,6 +75,7 @@ public class QueueHandler {
     public Queue getQueue(long queueId) {
         for(Queue q : queues){
             if(queueId == q.getQueueId()){
+                System.out.println("Found the queue!");
                 return q;
             }
         }
@@ -82,5 +90,58 @@ public class QueueHandler {
             }
         }
         return null;
+    }
+
+    public LinkedList<Queue> getClientQueues(long clientId) {
+        LinkedList<Queue> clientQueues = new LinkedList<>();
+        System.out.printf("Searchin for queues...");
+        for(Queue q : queues){
+            System.out.printf("queue: " +q.getClient());
+            System.out.printf("input: " +clientId);
+            if(q.getClient() == clientId){
+                System.out.println("Found one!");
+                clientQueues.push(q);
+            }
+        }
+        return clientQueues;
+    }
+
+    public void deleteQueue(long queueId) {
+        for(Queue q : queues){
+            if(queueId == q.getQueueId()){
+                queues.remove(q);
+                break;
+            }
+        }
+    }
+
+    public void startQueue(long queueId) {
+        for(Queue q : queues){
+            if(queueId == q.getQueueId()){
+                q.setStatus(QueueStatus.ACTIVE);
+                final Queue qe = q;
+                Thread queueThread = new Thread(){
+                    @Override
+                    public void run()
+                    {
+                        while(true) {
+                            qe.onUpdate();
+                            try {
+                                Thread.sleep(1500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                };
+                break;
+            }
+        }
+    }
+
+    private static int lastMatchId = -1;
+    public static int generateMatchId() {
+        lastMatchId++;
+        return lastMatchId;
     }
 }

@@ -1,5 +1,8 @@
 package matchmaker.queue;
 
+import com.Client;
+import com.ClientHandler;
+import config.ClientConfig;
 import config.QueueConfig;
 import matchmaker.match.Player;
 import org.junit.Before;
@@ -17,7 +20,8 @@ public class QueueTest {
 
     @Before
     public void setUp() throws Exception{
-        queue = new Queue(0,new QueueConfig());
+        long clientId = ClientHandler.createClient(new ClientConfig());
+        queue = new Queue(0, clientId, new QueueConfig());
     }
 
     @Test

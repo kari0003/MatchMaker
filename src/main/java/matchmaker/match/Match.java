@@ -82,11 +82,12 @@ public class Match implements Serializable{
         double dist = 0;
         for(int i = 0; i < teamCount; i++){
             for(int j = i+1; j< teamCount; j++){
+                double thisDist = Math.abs(teams[i].getTeamScore() - teams[j].getTeamScore());
                 if(i==0 && j==1){
-                    dist = Math.abs(teams[i].getTeamScore() - teams[j].getTeamScore());
+                    dist = thisDist;
                 }
-                if(dist < Math.abs(teams[i].getTeamScore() - teams[j].getTeamScore())){
-                    dist = Math.abs(teams[i].getTeamScore() - teams[j].getTeamScore());
+                if(dist < thisDist){
+                    dist = thisDist;
                 }
             }
         }

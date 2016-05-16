@@ -1,5 +1,6 @@
 package matchmaker.queue;
 
+import com.sun.scenario.animation.shared.CurrentTime;
 import config.QueueConfig;
 import matchmaker.match.Player;
 import matchmaker.match.Match;
@@ -15,17 +16,21 @@ import java.util.LinkedList;
  */
 public class Queue {
     private final long queueId;
+    private long clientId;
     private QueueStatus status;
     private QueueConfig config;
     private LinkedList<QueueEntry> players = new LinkedList<>();
     private QueueMatcher matcher;
     private LinkedList<Match> found_matches = new LinkedList<>();
+    private long lastUpdateTime;
 
-    public Queue(long id, QueueConfig config) throws Exception {
+    public Queue(long id, long clientId, QueueConfig config) throws Exception {
         queueId = id;
+        this.clientId = clientId;
         String key = "test";
         this.config = config;
         status = QueueStatus.ACTIVE;
+        lastUpdateTime = System.currentTimeMillis();
         matcher = createMatcher(key, config);
     }
 
@@ -47,11 +52,22 @@ public class Queue {
 
     public QueueStatus onUpdate() {
         LinkedList<Match> matches = matcher.findMatches(players);
+        long currentTime = System.currentTimeMillis();
+        long delta = getTimeElapsed(currentTime);
+        for(QueueEntry entry : getEntries()){
+            entry.addWaitingTime(delta);
+        }
         if (matches != null && matches.size() > 0) {
             status = QueueStatus.MATCH_FOUND;
             found_matches.addAll(matches);
         }
+        lastUpdateTime = currentTime;
         return status;
+    }
+
+    private long getTimeElapsed(long currentTime) {
+        long delta = currentTime - lastUpdateTime;
+        return delta;
     }
 
     public void addPlayer(Player player) {
@@ -74,11 +90,23 @@ public class Queue {
         return status;
     }
 
+    public void setStatus(QueueStatus status){
+        this.status = status;
+    }
+
     public LinkedList<Match> getFoundMatches(){
         return found_matches;
     }
 
     public LinkedList<QueueEntry> getEntries() {
         return players;
+    }
+
+    public long getClient() {
+        return clientId;
+    }
+
+    public void setClient(long clientId) {
+        this.clientId = clientId;
     }
 }

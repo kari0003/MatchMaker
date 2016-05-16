@@ -18,4 +18,9 @@ public class ClientConfig {
         queueConfigs.put(key, queueConfig);
         return key;
     }
+
+    public void updateConfig(ClientConfig conf) {
+        //TODO
+        queueConfigs = conf.queueConfigs;
+    }
 }

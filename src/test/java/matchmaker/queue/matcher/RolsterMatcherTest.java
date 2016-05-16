@@ -49,7 +49,6 @@ public class RolsterMatcherTest {
 
     }
 
-
     @Test
     public void testFindMatchesTeamDistance() throws Exception {
         LinkedList<QueueEntry> rolsters = new LinkedList<>();
@@ -65,6 +64,7 @@ public class RolsterMatcherTest {
         assertNotNull(matches);
         assertEquals(0, matches.size());
     }
+
     @Test
     public void testFindMatchesRolsterDistance() throws Exception {
         LinkedList<QueueEntry> rolsters = new LinkedList<>();
@@ -79,5 +79,23 @@ public class RolsterMatcherTest {
         LinkedList<Match> matches = matcher.findMatches(rolsters);
         assertNotNull(matches);
         assertEquals(0, matches.size());
+    }
+
+    @Test
+    public void testFindMatchesImperfectMatch() throws Exception {
+        LinkedList<QueueEntry> rolsters = new LinkedList<>();
+        rolsters.push(new QueueEntry(new Player("Podric", 1300)));
+        rolsters.push(new QueueEntry(new Player("Pongrác", 1300)));
+        rolsters.push(new QueueEntry(new Player("Persival", 1300)));
+        rolsters.push(new QueueEntry(new Player("Pondró", 1300)));
+        rolsters.push(new QueueEntry(new Player("Podric1", 1388)));
+        rolsters.push(new QueueEntry(new Player("Pongrác1", 1388)));
+        rolsters.push(new QueueEntry(new Player("Persival1", 1388)));
+        rolsters.push(new QueueEntry(new Player("Pondró1", 1388)));
+        LinkedList<Match> matches = matcher.findMatches(rolsters);
+        assertNotNull(matches);
+        assertEquals(1, matches.size());
+        System.out.println(matches.get(0).toString());
+
     }
 }

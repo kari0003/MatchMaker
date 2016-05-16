@@ -9,16 +9,24 @@ import matchmaker.match.Team;
  */
 public class QueueEntry {
     public Player player;
-    public long enter_time;
+    private long waitingTime;
 
     public QueueEntry(Player player) {
         this.player = player;
-        enter_time = System.currentTimeMillis();
+        waitingTime = 0;
+    }
+
+    public double getDist(QueueEntry from, int waitModifier, int maxWaitModification){
+        double plainDist = getDist(from);
+        //Only the modifier of the entry that waited less will be considered.
+        double waitModification = (Math.min(from.getWaitingTime(),waitingTime)/1000.0)*waitModifier;
+        //The dist cant be less than 0, and cant be modified by more than what the config says.
+        double distWithWait = Math.max(0, plainDist - Math.min(waitModification, maxWaitModification));
+        return distWithWait;
     }
 
     public double getDist(QueueEntry from){
         return Math.abs(from.player.getElo() - player.getElo());
-
     }
 
     public double getDist(Team team) {
@@ -31,5 +39,13 @@ public class QueueEntry {
 
     public double getScore() {
         return player.getElo();
+    }
+
+    public long getWaitingTime() {
+        return waitingTime;
+    }
+
+    public void addWaitingTime(long delta) {
+        this.waitingTime += delta;
     }
 }

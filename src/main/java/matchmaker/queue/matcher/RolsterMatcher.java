@@ -13,27 +13,18 @@ import java.util.LinkedList;
  * Created by Robi on 2016.04.15..
  */
 public class RolsterMatcher extends QueueMatcher {
-    private int maxTargets = 1;
-    private int maxPotentials = 30;
-    private double maxDistancePlayers = 100;
-    private double maxDistanceTeams = 300;
+    private MatcherConfig conf;
 
 
     public RolsterMatcher(MatcherConfig conf, int teamSize, int teamCount)
     {
         super(teamSize, teamCount);
-        maxTargets = conf.maxTargets;
-        maxPotentials = conf.maxPotentials;
-        maxDistancePlayers = conf.maxDistancePlayers;
-        maxDistanceTeams = conf.maxDistanceTeams;
+        this.conf = conf;
     }
 
     public RolsterMatcher(MatcherConfig matcherConfig, MatchConfig matchConfig) {
         super(matcherConfig, matchConfig);
-        maxTargets = matcherConfig.maxTargets;
-        maxPotentials = matcherConfig.maxPotentials;
-        maxDistancePlayers = matcherConfig.maxDistancePlayers;
-        maxDistanceTeams = matcherConfig.maxDistanceTeams;
+        this.conf = matcherConfig;
     }
 
     @Override
@@ -52,7 +43,7 @@ public class RolsterMatcher extends QueueMatcher {
 
     private LinkedList<QueueEntry> gatherTargets(LinkedList<QueueEntry> rolsters) {
         LinkedList<QueueEntry> result = new LinkedList<>();
-        int count = Math.min(maxTargets, rolsters.size());
+        int count = Math.min(conf.maxTargets, rolsters.size());
         for(int i = 0; i< count; i++){
             result.add(rolsters.get(i));
         }
@@ -65,10 +56,10 @@ public class RolsterMatcher extends QueueMatcher {
         LinkedList<QueueEntry> potentials = new LinkedList<QueueEntry>();
         for (QueueEntry rolster : rolsters) {
             if(target.player != rolster.player) {
-                if (target.getDist(rolster) < maxDistancePlayers) {
+                if (target.getDist(rolster) < conf.maxDistancePlayers) {
                     potentials.push(rolster);
                 }
-                if (potentials.size() > maxPotentials) {
+                if (potentials.size() > conf.maxPotentials) {
                     break;
                 }
             }
@@ -125,7 +116,7 @@ public class RolsterMatcher extends QueueMatcher {
                 success = true;
                 break;
             }
-            
+
             if(potentials.size() == 0) {
                 finished = true;
                 success = validateMatch(match);
@@ -144,11 +135,11 @@ public class RolsterMatcher extends QueueMatcher {
         if(match.getTeamCount() != matchConfig.teamCount){
             return false;
         }
-        if (match.getMaxDistance() > maxDistanceTeams){
+        if (match.getMaxDistance() > conf.maxDistanceTeams){
             return false;
         }
         for(int i = 0; i < match.getTeamCount(); i++){
-            if(match.getTeam(i).getTeamDist() > maxDistancePlayers){
+            if(match.getTeam(i).getTeamDist() > conf.maxDistancePlayers){
                 return false;
             }
             if(match.getTeam(i).getMemberCount() != matchConfig.teamSize){

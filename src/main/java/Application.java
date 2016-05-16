@@ -20,11 +20,5 @@ public class Application {
         QueueHandler.initialize();
         ApplicationContext ctx = SpringApplication.run(CommunicationController.class, args);
 
-        String[] beanNames = ctx.getBeanDefinitionNames();
-        Arrays.sort(beanNames);
-        for (String beanName : beanNames) {
-            System.out.println(beanName);
-        }
-
     }
 }
