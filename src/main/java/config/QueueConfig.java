@@ -21,6 +21,12 @@ public class QueueConfig {
         matchConfigs.put("test", new MatchConfig(teamSize, teamCount));
     }
 
+    public QueueConfig(int updateMillis, MatcherConfig matcher, MatchConfig match ){
+        updateInterval = updateMillis;
+        matcherConfigs.put("test", matcher);
+        matchConfigs.put("test", match);
+    }
+
     public QueueConfig(){
         this(1000, 3, 2);
     }

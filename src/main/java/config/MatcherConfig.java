@@ -19,7 +19,7 @@ public class MatcherConfig {
     public int maxWaitModification;
 
     public MatcherConfig(){
-        this(MatcherType.DEFAULT, 30, 1, 100, 300);
+        this(MatcherType.DEFAULT, 30, 1, 100, 300, 10, 30, 10, 100 );
     }
 
     public MatcherConfig(MatcherType type, int maxPotentials, int maxTargets, int maxDistancePlayers, int maxDistanceTeams){

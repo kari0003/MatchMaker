@@ -36,7 +36,7 @@ public class QueueHandler {
     public void updateQueue(long queueId){
         for (Queue q : queues) {
             if(q.getQueueId() == queueId) {
-                System.out.printf("Update Queue: " + queueId);
+                System.out.printf("\nUpdate Queue: " + queueId+"\n");
                 q.onUpdate();
             }
         }
@@ -89,7 +89,6 @@ public class QueueHandler {
     public Queue getQueue(long queueId) {
         for(Queue q : queues){
             if(queueId == q.getQueueId()){
-                System.out.println("Found the queue!");
                 return q;
             }
         }
@@ -110,12 +109,10 @@ public class QueueHandler {
 
     public LinkedList<Queue> getClientQueues(long clientId) {
         LinkedList<Queue> clientQueues = new LinkedList<>();
-        System.out.printf("Searchin for queues...");
         for(Queue q : queues){
             System.out.printf("queue: " +q.getClient());
             System.out.printf("input: " +clientId);
             if(q.getClient() == clientId){
-                System.out.println("Found one!");
                 clientQueues.push(q);
             }
         }

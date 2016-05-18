@@ -4,6 +4,7 @@ import com.sun.scenario.animation.shared.CurrentTime;
 import config.QueueConfig;
 import matchmaker.match.Player;
 import matchmaker.match.Match;
+import matchmaker.queue.matcher.EloMatcher;
 import matchmaker.queue.matcher.RolsterMatcher;
 
 import java.util.LinkedList;
@@ -42,6 +43,8 @@ public class Queue {
             throw new Exception("Match Configuration not found!");
         }else {
             switch (config.matcherConfigs.get(key).matcherType) {
+                case ELO_MATCHER:
+                    return new EloMatcher(config.matcherConfigs.get(key), config.matchConfigs.get(key));
                 case ROLSTER_MATCHER:
                     return new RolsterMatcher(config.matcherConfigs.get(key), config.matchConfigs.get(key));
                 default:

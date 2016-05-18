@@ -5,5 +5,6 @@ package config;
  */
 public enum MatcherType {
     DEFAULT,
+    ELO_MATCHER,
     ROLSTER_MATCHER,
 }

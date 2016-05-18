@@ -118,7 +118,7 @@ public class CommunicationController {
     }
 
 
-    @RequestMapping(value="/queue/{queueId}/start", method = RequestMethod.DELETE)
+    @RequestMapping(value="/queue/{queueId}/start", method = RequestMethod.POST)
     public void startQueue(@PathVariable(value="queueId") String id,
                                       @RequestHeader(value="authentication") String auth) {
         long clientId = Long.parseLong(auth);
