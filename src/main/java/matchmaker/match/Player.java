@@ -1,5 +1,7 @@
 package matchmaker.match;
 
+import java.util.HashMap;
+
 /**
  * Created by Robi on 2016.02.25..
  * Contains the basic informations about the player. The player enters a Queue as a super object of QueueMember, and
@@ -10,6 +12,7 @@ public class Player {
     private final int id;
     private final String name;
     private int elo;
+    public HashMap<String, Integer> scores = new HashMap<>();
 
     public Player(String name,int elo) {
         lastId += 1;
@@ -24,8 +27,12 @@ public class Player {
         elo = 0;
     }
 
-    public int getElo(){
-        return elo;
+    public int getScore(String key){
+        return scores.get(key);
+    }
+
+    public void setScore(String key, int value){
+        scores.put(key,value);
     }
 
     @Override
@@ -37,6 +44,5 @@ public class Player {
 
         if (id != player.id) return false;
         return name.equals(player.name);
-
     }
 }

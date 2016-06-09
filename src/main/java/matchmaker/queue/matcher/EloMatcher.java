@@ -38,8 +38,7 @@ public class EloMatcher extends QueueMatcher {
         }
         QueueEntry picked = pickRolster(rolsters);
         LinkedList<QueueEntry> scope = getPotentials(picked, rolsters);
-        if(scope.size() > teamSize*teamCount){
-            System.out.println("teamSize*teamCount = " + teamSize*teamCount);
+        if(scope.size() > teamSize*teamCount - 1){
             Match match = populateMatch(picked, scope);
             if(match != null) {
                 System.out.println("match = " + match);
@@ -55,23 +54,19 @@ public class EloMatcher extends QueueMatcher {
     private Match populateMatch(final QueueEntry picked, LinkedList<QueueEntry> scope) {
         int teamSize = matchConfig.teamSize;
         int teamCount = matchConfig.teamCount;
-        System.out.println("llelleleleeleleleleleleel");
+        System.out.println("Populating a match:");
         Comparator<QueueEntry> comparator = new Comparator<QueueEntry>() {
             public int compare(QueueEntry c1, QueueEntry c2) {
-                return (int)(c2.getDist(picked) - c1.getDist(picked));
+                return (int)(c2.getDist(picked, matcherConfig) - c1.getDist(picked, matcherConfig));
             }
         };
         Collections.sort(scope, comparator);
 
-        System.out.println("Can you believe this");
         Match result = new Match(QueueHandler.generateMatchId(), teamCount,teamSize);
 
         for(int position = 0; position < teamSize; position++){
             for(int teamId = 0; teamId < teamCount; teamId++) {
-                System.out.println("teamId = " + teamId);
-                System.out.println("position = " + position);
                 TeamMember member = new TeamMember(position, scope.pop());
-                System.out.println("member = " + member);
                 result.getTeam(teamId).addMember(member);
             }
         }
@@ -81,8 +76,8 @@ public class EloMatcher extends QueueMatcher {
     private LinkedList<QueueEntry> getPotentials(QueueEntry picked, LinkedList<QueueEntry> rolsters) {
         LinkedList<QueueEntry> potentials = new LinkedList<>();
         for(QueueEntry rolster : rolsters){
-            double dist = picked.getDist(rolster, matcherConfig.waitModifier, matcherConfig.maxWaitModification);
-            if(dist < matcherConfig.maxDistancePlayers){
+            double dist = picked.getDist(rolster, matcherConfig);
+            if(dist < matcherConfig.maxDistancePlayers && !rolster.drafted){
                 potentials.add(rolster);
             }
         }

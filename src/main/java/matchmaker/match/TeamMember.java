@@ -1,5 +1,6 @@
 package matchmaker.match;
 
+import config.MatcherConfig;
 import matchmaker.queue.QueueEntry;
 
 import java.io.Serializable;
@@ -17,15 +18,23 @@ public class TeamMember implements Serializable{
         this.rolster = entry;
     }
 
-    public double getScore(){
+    public double getDist(TeamMember from, MatcherConfig conf){
+        return rolster.getDist(from.getQueueEntry(), conf);
+    }
+
+    public double getScore(String key){
         if(rolster == null){
             System.out.printf("buggery!");
             return 0;
         }
-        return rolster.getScore();
+        return rolster.getScore(key);
     }
 
     public QueueEntry getQueueEntry() {
         return rolster;
+    }
+
+    public long getWaitingTime() {
+        return this.getQueueEntry().getWaitingTime();
     }
 }

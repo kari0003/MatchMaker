@@ -1,9 +1,12 @@
 package matchmaker.queue;
 
 import com.sun.scenario.animation.shared.CurrentTime;
+import config.MatchConfig;
+import config.MatcherConfig;
 import config.QueueConfig;
 import matchmaker.match.Player;
 import matchmaker.match.Match;
+import matchmaker.match.Team;
 import matchmaker.queue.matcher.EloMatcher;
 import matchmaker.queue.matcher.RolsterMatcher;
 
@@ -28,28 +31,27 @@ public class Queue {
     public Queue(long id, long clientId, QueueConfig config) throws Exception {
         queueId = id;
         this.clientId = clientId;
-        String key = "test";
         this.conf = config;
         status = QueueStatus.ACTIVE;
         lastUpdateTime = System.currentTimeMillis();
-        matcher = createMatcher(key, config);
+        matcher = createMatcher(config);
     }
 
-    private QueueMatcher createMatcher(String key, QueueConfig config) throws Exception {
-        if(config.matcherConfigs.get(key) == null) {
+    private QueueMatcher createMatcher(QueueConfig config) throws Exception {
+        if(config.matcherConfig == null) {
             throw new Exception("Matcher Configuration not found!");
         }
-        else if(config.matchConfigs.get(key) == null) {
+        if(config.matchConfig == null) {
             throw new Exception("Match Configuration not found!");
-        }else {
-            switch (config.matcherConfigs.get(key).matcherType) {
-                case ELO_MATCHER:
-                    return new EloMatcher(config.matcherConfigs.get(key), config.matchConfigs.get(key));
-                case ROLSTER_MATCHER:
-                    return new RolsterMatcher(config.matcherConfigs.get(key), config.matchConfigs.get(key));
-                default:
-                    return new QueueMatcher(config.matcherConfigs.get(key), config.matchConfigs.get(key));
-            }
+        }
+        switch (config.matcherConfig.matcherType) {
+            case ELO_MATCHER:
+                return new EloMatcher(config.matcherConfig, config.matchConfig);
+            case ROLSTER_MATCHER:
+                return new RolsterMatcher(config.matcherConfig, config.matchConfig);
+            default:
+                return new QueueMatcher(config.matcherConfig, config.matchConfig);
+
         }
     }
 
@@ -62,10 +64,22 @@ public class Queue {
         }
         if (matches != null && matches.size() > 0) {
             status = QueueStatus.MATCH_FOUND;
+            Queue.draftRolsters(matches);
             found_matches.addAll(matches);
         }
         lastUpdateTime = currentTime;
         return status;
+    }
+
+    private static void draftRolsters(LinkedList<Match> matches) {
+        for(Match m : matches){
+            for(int teamId = 0; teamId < m.getTeamCount(); teamId++){
+                Team t = m.getTeam(teamId);
+                for(QueueEntry rolster : t.getQueueEntries()){
+                    rolster.drafted = true;
+                }
+            }
+        }
     }
 
     private long getTimeElapsed(long currentTime) {

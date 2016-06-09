@@ -23,7 +23,7 @@ public class MatchConfig{
 
         try {
 
-            input = new FileInputStream("config/baseMatchConfig");
+            input = new FileInputStream("config/baseMatchConfig.config");
 
             basicConfig.load(input);
 

@@ -23,8 +23,10 @@ public class RolsterMatcherTest {
     @Before
     public void setUp() throws Exception {
         MatchConfig matchConfig = new MatchConfig(2,3);
-        MatcherConfig matcherConfig = new MatcherConfig(MatcherType.ROLSTER_MATCHER, 30,1, 100, 300);
-        matcherConfig.considerElo(1.0);
+        MatcherConfig matcherConfig = new MatcherConfig(MatcherType.ROLSTER_MATCHER)
+                .limitPotentials(30, 1)
+                .addAspect("elo", 1.0, true)
+                .addDistance(100, 300);
         matcher = new RolsterMatcher(matcherConfig, matchConfig);
     }
 
@@ -39,13 +41,16 @@ public class RolsterMatcherTest {
         rolsters.push(new QueueEntry(new Player("Pongrác1", 1300)));
         rolsters.push(new QueueEntry(new Player("Persival1", 1300)));
         rolsters.push(new QueueEntry(new Player("Pondró1", 1300)));
+        for(QueueEntry r : rolsters){
+            r.player.setScore("elo", 1300);
+        }
         LinkedList<Match> matches = matcher.findMatches(rolsters);
         assertNotNull(matches);
         assertEquals(matcher.matchConfig.teamCount, matches.getFirst().getTeamCount());
         for(int i = 0; i < matcher.matchConfig.teamCount; i++){
             assertEquals(matcher.matchConfig.teamSize, matches.getFirst().getTeam(i).getMemberCount());
         }
-        assertTrue(matcher.matcherConfig.maxDistanceTeams >= matches.getFirst().getMaxDistance());
+        assertTrue(matcher.matcherConfig.maxDistanceTeams >= matches.getFirst().getMaxDistance(matcher.matcherConfig));
 
     }
 
@@ -60,6 +65,11 @@ public class RolsterMatcherTest {
         rolsters.push(new QueueEntry(new Player("Pongrác1", 1800)));
         rolsters.push(new QueueEntry(new Player("Persival1", 1900)));
         rolsters.push(new QueueEntry(new Player("Pondró1", 2000)));
+        int elo = 1300;
+        for(QueueEntry r : rolsters){
+            r.player.setScore("elo", elo);
+            elo += 100;
+        }
         LinkedList<Match> matches = matcher.findMatches(rolsters);
         assertNotNull(matches);
         assertEquals(0, matches.size());
@@ -76,6 +86,11 @@ public class RolsterMatcherTest {
         rolsters.push(new QueueEntry(new Player("Pongrác1", 1805)));
         rolsters.push(new QueueEntry(new Player("Persival1", 1906)));
         rolsters.push(new QueueEntry(new Player("Pondró1", 2007)));
+        int elo = 1300;
+        for(QueueEntry r : rolsters){
+            r.player.setScore("elo", elo);
+            elo += 101;
+        }
         LinkedList<Match> matches = matcher.findMatches(rolsters);
         assertNotNull(matches);
         assertEquals(0, matches.size());
@@ -92,6 +107,11 @@ public class RolsterMatcherTest {
         rolsters.push(new QueueEntry(new Player("Pongrác1", 1388)));
         rolsters.push(new QueueEntry(new Player("Persival1", 1388)));
         rolsters.push(new QueueEntry(new Player("Pondró1", 1388)));
+        int i = 1;
+        for(QueueEntry r : rolsters){
+            r.player.setScore("elo", i > 4 ? 1300 : 1388);
+            i++;
+        }
         LinkedList<Match> matches = matcher.findMatches(rolsters);
         assertNotNull(matches);
         assertEquals(1, matches.size());

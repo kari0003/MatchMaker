@@ -30,8 +30,10 @@ public class QueueWaitTest {
         ClientHandler.initialize();
         long cId = ClientHandler.createClient(new ClientConfig());
         MatchConfig matchConfig = new MatchConfig(2,3);
-        MatcherConfig matcherConfig = new MatcherConfig(MatcherType.ELO_MATCHER, 30,1, 100, 300, 10, 30, 10, 100);
-        matcherConfig.considerElo(1.0);
+        MatcherConfig matcherConfig = new MatcherConfig(MatcherType.ELO_MATCHER).addDistance(100, 300)
+                .addWaiting(true, 10, 100)
+                .limitPotentials(20, 1)
+                .addAspect("elo", 1, true);
         conf = new QueueConfig(100, matcherConfig, matchConfig);
         conf.updateOnInsert = false;
         conf.updateWhenChecked = false;
@@ -49,18 +51,23 @@ public class QueueWaitTest {
         players.push(new Player("Plakó", 1300));
         players.push(new Player("Korsó", 1300));
         players.push(new Player("Porhó", 1300));
+        int elo = 1300;
+        for(Player p : players){
+            p.setScore("elo", elo);
+            elo += 0;
+        }
         for(Player p : players){
             QueueHandler.getHandler().getQueue(queueId).addPlayer(p);
         }
-        Thread.sleep(conf.updateInterval + 10);
+        Thread.sleep(10*conf.updateInterval + 100);
         LinkedList<Match> matches = QueueHandler.getHandler().checkQueue(queueId);
         assertNotNull(matches);
-        //assertEquals(2, matches.size());
+        assertEquals(1, matches.size());
         assertEquals(3 , matches.getFirst().getTeamCount());
         for(int i = 0; i < matches.getFirst().getTeamCount(); i++){
             assertEquals(2 , matches.getFirst().getTeam(i).getMemberCount());
         }
-        assertTrue(300 >= matches.getFirst().getMaxDistance());
+        assertTrue(300 >= matches.getFirst().getMaxDistance(conf.matcherConfig));
 
     }
 

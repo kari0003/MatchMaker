@@ -45,7 +45,9 @@ public class RolsterMatcher extends QueueMatcher {
         LinkedList<QueueEntry> result = new LinkedList<>();
         int count = Math.min(conf.maxTargets, rolsters.size());
         for(int i = 0; i< count; i++){
-            result.add(rolsters.get(i));
+            if(!rolsters.get(i).drafted) {
+                result.add(rolsters.get(i));
+            }
         }
         //TODO configurable target selection
         //result.add(rolsters.getLast());
@@ -55,8 +57,8 @@ public class RolsterMatcher extends QueueMatcher {
     private LinkedList<QueueEntry> getPotentials(LinkedList<QueueEntry> rolsters, QueueEntry target){
         LinkedList<QueueEntry> potentials = new LinkedList<QueueEntry>();
         for (QueueEntry rolster : rolsters) {
-            if(target.player != rolster.player) {
-                if (target.getDist(rolster) < conf.maxDistancePlayers) {
+            if(target.player != rolster.player && !target.drafted) {
+                if (target.getDist(rolster, matcherConfig) < conf.maxDistancePlayers) {
                     potentials.push(rolster);
                 }
                 if (potentials.size() > conf.maxPotentials) {
@@ -85,7 +87,7 @@ public class RolsterMatcher extends QueueMatcher {
         for(QueueEntry rolster : potentials){
             if(rolster.getMemberCount() + forMatch.getTeam(forTeam).getMemberCount() <= matchConfig.teamSize){
                 double playerDist =  rolster.getDist(forMatch.getTeam(forTeam));
-                double teamDist = forMatch.getTeamDistWithRolster(forTeam, rolster);
+                double teamDist = forMatch.getTeamDistWithRolster(forTeam, rolster, matcherConfig);
                 double dist = teamDist + playerDist;
                 if (( dist < bestDist )||(potentials.get(0) == rolster)){
                     bestDist = playerDist;
@@ -135,11 +137,11 @@ public class RolsterMatcher extends QueueMatcher {
         if(match.getTeamCount() != matchConfig.teamCount){
             return false;
         }
-        if (match.getMaxDistance() > conf.maxDistanceTeams){
+        if (match.getMaxDistance(matcherConfig) > conf.maxDistanceTeams){
             return false;
         }
         for(int i = 0; i < match.getTeamCount(); i++){
-            if(match.getTeam(i).getTeamDist() > conf.maxDistancePlayers){
+            if(match.getTeam(i).getTeamDist(matcherConfig) > conf.maxDistancePlayers){
                 return false;
             }
             if(match.getTeam(i).getMemberCount() != matchConfig.teamSize){

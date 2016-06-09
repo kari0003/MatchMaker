@@ -1,5 +1,6 @@
 package matchmaker.match;
 
+import config.MatcherConfig;
 import matchmaker.queue.QueueEntry;
 
 import java.io.Serializable;
@@ -35,27 +36,27 @@ public class Team implements Serializable{
     }
 
 
-    public double getTeamScore(){
+    public double getTeamScore(String aspect){
         double score = 0;
         if(memberCount > 0) {
             for (int i = 0; i < memberCount; i++) {
                 TeamMember m = members[i];
                 if(m != null) {
-                    score += m.getScore();
+                    score += m.getScore(aspect);
                 }
             }
         }
         return score;
     }
 
-    public double getTeamDist(){
+    public double getTeamDist(MatcherConfig config){
         double[][] diffStat = new double[members.length][members.length];
         double[] avgDist = new double[members.length];
         double maxDist = 0;
         for(int i = 0; i < memberCount; i++){
             avgDist[i] = 0;
-            for(int j = i; j < memberCount; j++){
-                diffStat[i][j] = Math.abs(members[i].getScore() - members[j].getScore());
+            for(int j = i+1; j < memberCount; j++){
+                diffStat[i][j] = members[i].getDist(members[j], config);
                 avgDist[i] += diffStat[i][j];
                 if(diffStat[i][j] > maxDist){
                     maxDist = diffStat[i][j];
@@ -63,7 +64,6 @@ public class Team implements Serializable{
             }
             avgDist[i] /= members.length;
         }
-
         return maxDist;
     }
 
@@ -83,11 +83,21 @@ public class Team implements Serializable{
         return entries;
     }
 
-    public double getTeamScoreWithRolster(QueueEntry rolster) {
+    public double getTeamScoreWithRolster(String aspect, QueueEntry rolster) {
         double score = 0;
-        score += getTeamScore();
-        score += rolster.getScore();
+        score += getTeamScore(aspect);
+        score += rolster.getScore(aspect);
         return score;
     }
 
+    public long getTeamWaitingTime() {
+        long minWait = -1;
+        for(int i = 0; i < memberCount; i++){
+            long waitingTime = members[i].getWaitingTime();
+            if(i == 0 || waitingTime < minWait){
+                minWait = waitingTime;
+            }
+        }
+        return minWait;
+    }
 }

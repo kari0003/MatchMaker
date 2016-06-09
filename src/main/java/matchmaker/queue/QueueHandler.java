@@ -36,7 +36,6 @@ public class QueueHandler {
     public void updateQueue(long queueId){
         for (Queue q : queues) {
             if(q.getQueueId() == queueId) {
-                System.out.printf("\nUpdate Queue: " + queueId+"\n");
                 q.onUpdate();
             }
         }
@@ -98,6 +97,7 @@ public class QueueHandler {
     public LinkedList<Match> checkQueue(long queueId) {
         for(Queue q : queues){
             if(queueId == q.getQueueId()){
+                System.out.printf("ChekcQueue");
                 if(q.getConfig().updateWhenChecked){
                     updateQueue(queueId);
                 }
