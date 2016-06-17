@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.util.LinkedList;
 
+import static com.sun.xml.internal.ws.dump.LoggingDumpTube.Position.Before;
 import static org.junit.Assert.*;
 
 /**
