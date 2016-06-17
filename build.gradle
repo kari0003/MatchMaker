@@ -1,4 +1,3 @@
-import javax.xml.ws.Service
 
 group 'MatchMakerService'
 version '1.0-SNAPSHOT'
@@ -7,7 +6,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 //apply plugin: 'spring-boot'
 
-mainClassName = 'Service'
+mainClassName = 'main.Application'
 
 jar {
     baseName = 'gs-gradle'

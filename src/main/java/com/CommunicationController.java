@@ -44,8 +44,9 @@ public class CommunicationController {
     }*/
 
     @RequestMapping(value="/", method = RequestMethod.POST)
-    public long createClient() {
-        return ClientHandler.createClient(new ClientConfig());
+    public ClientConfig createClient() {
+        long clientId = ClientHandler.createClient(new ClientConfig());
+        return ClientHandler.getClient(clientId).conf;
     }
 
     @RequestMapping(value="/", method = RequestMethod.DELETE)
@@ -75,6 +76,7 @@ public class CommunicationController {
                           @RequestBody String queueKey) {
         long clientId = Long.parseLong(auth);
         System.out.printf("Queue Key is:" + queueKey);
+        queueKey = queueKey.replace("\"", "");
         return QueueHandler.getHandler().createQueue(clientId, queueKey);
     }
 

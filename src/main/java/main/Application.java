@@ -1,3 +1,5 @@
+package main;
+
 import com.ClientHandler;
 import com.CommunicationController;
 import matchmaker.queue.QueueHandler;
