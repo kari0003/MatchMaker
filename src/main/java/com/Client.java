@@ -15,6 +15,9 @@ public class Client {
     }
 
     public Client(long id, ClientConfig conf){
+        if(conf == null){
+            conf = new ClientConfig();
+        }
         clientId = id;
         this.conf = conf;
     }

@@ -9,8 +9,8 @@ import java.util.HashMap;
  */
 public class Player {
     private static int lastId = 0;
-    private final int id;
-    private final String name;
+    public final int id;
+    public final String name;
     private int elo;
     public HashMap<String, Integer> scores = new HashMap<>();
 
