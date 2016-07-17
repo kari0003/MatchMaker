@@ -6,6 +6,7 @@ import com.requests.CreateQueueRequest;
 import com.requests.RemovePlayerRequest;
 import com.responses.CheckQueueResponse;
 import com.responses.CreateQueueResponse;
+import com.responses.GeneralResponse;
 import config.ClientConfig;
 import matchmaker.match.Match;
 import matchmaker.queue.Queue;
@@ -28,25 +29,17 @@ import java.util.LinkedList;
 public class CommunicationController {
 
     @RequestMapping(value="/", method = RequestMethod.GET)
-    public @ResponseBody LinkedList<Client> getClients() {
-        return ClientHandler.getClients();
+    public @ResponseBody GeneralResponse getClients() {
+        return new GeneralResponse(ClientHandler.getClients());
     }
-/*
-    @RequestMapping(value="/", method = RequestMethod.POST)
-    public long createClient(@RequestBody ClientConfig conf) {
-        long id = -1;
-        if(conf != null){
-            id = ClientHandler.createClient(conf);
-        }else{
-            id = ClientHandler.createClient(new ClientConfig());
-        }
-        return id;
-    }*/
 
     @RequestMapping(value="/", method = RequestMethod.POST)
-    public ClientConfig createClient() {
+    public GeneralResponse createClient(@RequestBody ClientConfig conf) {
+        if (conf != null) {
+           return new GeneralResponse(ClientHandler.createClient(conf));
+        }
         long clientId = ClientHandler.createClient(new ClientConfig());
-        return ClientHandler.getClient(clientId).conf;
+        return new GeneralResponse((Long) clientId);
     }
 
     @RequestMapping(value="/", method = RequestMethod.DELETE)
@@ -66,29 +59,30 @@ public class CommunicationController {
     }
 
     @RequestMapping(value="/queue", method = RequestMethod.GET)
-    public @ResponseBody LinkedList<Queue> getQueues(@RequestHeader(value="authentication") String auth) {
+    public @ResponseBody GeneralResponse getQueues(@RequestHeader(value="authentication") String auth) {
         long clientId = Long.parseLong(auth);
-        return QueueHandler.getHandler().getClientQueues(clientId);
+        return new GeneralResponse(QueueHandler.getHandler().getClientQueues(clientId));
     }
 
     @RequestMapping(value="/queue", method = RequestMethod.POST)
-    public @ResponseBody long createQueue(@RequestHeader(value="authentication") String auth,
+    public @ResponseBody GeneralResponse createQueue(@RequestHeader(value="authentication") String auth,
                           @RequestBody String queueKey) {
+        System.out.println("auth = [" + auth + "], queueKey = [" + queueKey + "]");
         long clientId = Long.parseLong(auth);
         System.out.printf("Queue Key is:" + queueKey);
         queueKey = queueKey.replace("\"", "");
-        return QueueHandler.getHandler().createQueue(clientId, queueKey);
+        return new GeneralResponse(QueueHandler.getHandler().createQueue(clientId, queueKey));
     }
 
     @RequestMapping(value="/queue/{queueId}", method = RequestMethod.GET)
-    public @ResponseBody CheckQueueResponse checkQueue(@PathVariable(value="queueId") String id,
+    public @ResponseBody GeneralResponse checkQueue(@PathVariable(value="queueId") String id,
                          @RequestHeader(value="authentication") String auth) {
         long clientId = Long.parseLong(auth);
         long queueId = Long.parseLong(id);
         //TODO Sort out id-s
         LinkedList<Match> matches = QueueHandler.getHandler().checkQueue(queueId);
         QueueStatus status = QueueHandler.getHandler().getQueue(queueId).getStatus();
-        return new CheckQueueResponse(matches, status);
+        return new GeneralResponse(new CheckQueueResponse(matches, status));
     }
 
     //TODO updateQueue
@@ -114,6 +108,7 @@ public class CommunicationController {
     public void removePlayerFromQueue(@PathVariable(value="queueId") String id,
                                  @RequestHeader(value="authentication") String auth,
                                  @RequestBody RemovePlayerRequest req) {
+        System.out.println("id = [" + id + "], auth = [" + auth + "], req = [" + req + "]");
         long clientId = Long.parseLong(auth);
         long queueId = Long.parseLong(id);
         QueueHandler.getHandler().getQueue(queueId).addPlayer(req.player);
@@ -127,36 +122,4 @@ public class CommunicationController {
         long queueId = Long.parseLong(id);
         QueueHandler.getHandler().startQueue(queueId);
     }
-
-
-    /*
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public @ResponseBody Client index() {
-        long clientId = ClientHandler.createClient(new ClientConfig());
-        return ClientHandler.getClient(clientId);
-    }
-
-    @RequestMapping(value = "/queue/create", method = RequestMethod.POST)
-    public @ResponseBody CreateQueueResponse CreateQueue(@RequestBody CreateQueueRequest req) {
-        long queueId = QueueHandler.getHandler().createQueue(req.getClientId(), req.getConfig());
-        return new CreateQueueResponse(queueId);
-    }
-
-
-    @RequestMapping(value = "/queue/addPlayer", method = RequestMethod.POST)
-    public @ResponseBody String CreateQueue(@RequestBody AddPlayerRequest req) {
-        QueueHandler.getHandler().getQueue(req.queueId).addPlayer(req.player);
-        return "Done.";
-    }
-
-    @RequestMapping(value = "/queue/{queueId}/check", method = RequestMethod.POST)
-    public @ResponseBody CheckQueueResponse CheckQueue(@PathVariable(value="someID") String id,
-                                                       @RequestHeader(value="authentication") String clientId,
-                                                       @RequestBody CheckQueueRequest req) {
-
-        LinkedList<Match> matches = QueueHandler.getHandler().checkQueue(req.queueId);
-        QueueStatus status = QueueHandler.getHandler().getQueue(req.queueId).getStatus();
-        return new CheckQueueResponse(matches, status );
-    }
-*/
 }
