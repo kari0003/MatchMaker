@@ -43,4 +43,8 @@ public class QueueConfig {
         matchConfig.teamSize = teamSize;
         return this;
     }
+
+    public void updateConfig(QueueConfig config) {
+        //TODO
+    }
 }

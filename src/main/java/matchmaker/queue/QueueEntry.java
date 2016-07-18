@@ -3,6 +3,7 @@ package matchmaker.queue;
 import config.MatcherConfig;
 import matchmaker.match.Player;
 import matchmaker.match.Team;
+import matchmaker.match.TeamMember;
 
 /**
  * Created by Robi on 2016.02.26..
@@ -40,8 +41,12 @@ public class QueueEntry {
         return Math.abs(from.player.getScore(aspect) - player.getScore(aspect));
     }
 
-    public double getDist(Team team) {
-        return 0;//TODO
+    public double getDist(Team team, MatcherConfig matcher) {
+        double dist = 0;
+        for (QueueEntry entry: team.getQueueEntries()) {
+            dist += this.getDist(entry, matcher);
+        }
+        return dist;
     }
 
     public int getMemberCount(){

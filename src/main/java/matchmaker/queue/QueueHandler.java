@@ -43,15 +43,20 @@ public class QueueHandler {
 
     public Thread createUpdaterThread(final long queueId, final QueueConfig conf){
         Thread updater = new Thread(){
+            public volatile boolean shouldInterrupt = false;
+
             @Override
             public void run() {
-                while(true) {
+                while(!shouldInterrupt) {
                     try {
                         updateQueue(queueId);
                         Thread.sleep(conf.updateInterval);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                }
+                if(shouldInterrupt && isAlive()){
+                    this.interrupt();
                 }
             }
         };
@@ -65,9 +70,15 @@ public class QueueHandler {
             queueId = generateId(clientId, queueCount);
             Client client = ClientHandler.getClient(clientId);
             if(client == null){
+                System.out.println("ClIENT IS NOULL");
                 throw new Error("Client with id:" + clientId + "not found!");
             }
-            client.conf.addQueue("id_" + queueId, config);
+            if(queues == null){
+                System.out.println("WTF? QUEUES IS NULL");
+            }
+            if(config == null) {
+                System.out.println("FRIGGIN CONFIG NULL -.- _:_");
+            }
             queues.add(new Queue(queueId, clientId, config));
             createUpdaterThread(queueId, config);
             queueCount += 1;
@@ -80,9 +91,13 @@ public class QueueHandler {
     public long createQueue(long clientId, String queueKey) {
         Client client = ClientHandler.getClient(clientId);
         if(client == null){
-            throw new Error("Client with id:" + clientId + "not found!");
+            throw new Error("Client with id: " + clientId + " not found!");
         }
-        return createQueue(clientId, client.conf.queueConfigs.get(queueKey));
+        QueueConfig config = client.conf.queueConfigs.get(queueKey);
+        if (config == null) {
+            throw new Error("Config with key: " + queueKey + " not found");
+        }
+        return createQueue(clientId, config);
     }
 
     public Queue getQueue(long queueId) {
@@ -120,12 +135,17 @@ public class QueueHandler {
     }
 
     public void deleteQueue(long queueId) {
+        Queue removableQueue = null;
+        Thread removableThread = updaterThread.remove(queueId);
         for(Queue q : queues){
             if(queueId == q.getQueueId()){
-                queues.remove(q);
+                removableQueue = q;
                 break;
             }
         }
+        queues.remove(removableQueue);
+        //TODO removableThread.shouldInterrupt = true;
+
     }
 
     public void startQueue(long queueId) {

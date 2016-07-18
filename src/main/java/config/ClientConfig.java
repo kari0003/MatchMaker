@@ -1,6 +1,9 @@
 package config;
 
+import matchmaker.queue.QueueEntry;
+
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Robi on 2016.04.12..
@@ -20,7 +23,14 @@ public class ClientConfig {
     }
 
     public void updateConfig(ClientConfig conf) {
-        //TODO
-        queueConfigs = conf.queueConfigs;
+        for (Map.Entry<String, QueueConfig> entry : conf.queueConfigs.entrySet()) {
+            String key = entry.getKey();
+            if (queueConfigs.get(key) != null) {
+                queueConfigs.get(key).updateConfig(entry.getValue());
+                queueConfigs.put(key, entry.getValue()); //TODO: To be removed after queueConfig is updateable
+            } else {
+                queueConfigs.put(key, entry.getValue());
+            }
+        }
     }
 }

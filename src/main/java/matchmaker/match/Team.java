@@ -78,7 +78,9 @@ public class Team implements Serializable{
     public Collection<? extends QueueEntry> getQueueEntries() {
         ArrayList<QueueEntry> entries = new ArrayList<QueueEntry>();
         for(TeamMember m : members){
-            entries.add(m.getQueueEntry());
+            if (m != null) {
+                entries.add(m.getQueueEntry());
+            }
         }
         return entries;
     }

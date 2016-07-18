@@ -132,4 +132,12 @@ public class Queue {
     public QueueConfig getConfig() {
         return conf;
     }
+
+    public void updateConfig(QueueConfig config) throws Exception {
+        if (config.matcherConfig.matcherType != matcher.matcherConfig.matcherType) {
+            matcher = this.createMatcher(config);
+        }
+        matcher.matcherConfig = config.matcherConfig;
+        conf = config;
+    }
 }

@@ -11,7 +11,7 @@ public class Player {
     private static int lastId = 0;
     public final int id;
     public final String name;
-    private int elo;
+    public int elo;
     public HashMap<String, Integer> scores = new HashMap<>();
 
     public Player(String name,int elo) {

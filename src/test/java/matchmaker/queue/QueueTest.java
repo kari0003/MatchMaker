@@ -19,7 +19,7 @@ public class QueueTest {
     Queue queue;
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         long clientId = ClientHandler.createClient(new ClientConfig());
         queue = new Queue(0, clientId, new QueueConfig());
     }

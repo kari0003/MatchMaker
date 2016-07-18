@@ -33,7 +33,6 @@ public class ClientHandler {
     public static Client getClient(long clientId) {
         for(Client c : clients){
             if(c.clientId == clientId){
-                System.out.println("Got the client!");
                 return c;
             }
         }
